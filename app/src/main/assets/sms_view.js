@@ -148,10 +148,11 @@ function jump(){
  sync(false);
 }
 function openAsLetter(id){
+ if(window.JacksonNav)JacksonNav.enter();
  state.view="mail";
  if(typeof GmailThreadUI!=="undefined")GmailThreadUI.setExpanded(id);
- selectLetter(id);
- $$("#viewMode button").forEach(b=>b.classList.toggle("selected",b.dataset.view==="mail"));
+ selectLetter(id,true);
+ $("#viewMode button").forEach(b=>b.classList.toggle("selected",b.dataset.view==="mail"));
 }
 window.SmsConversationUI={render,toggle,move,jump,openAsLetter,collect,windowFor,messageText};
 })();
