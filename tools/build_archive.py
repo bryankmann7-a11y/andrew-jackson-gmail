@@ -125,7 +125,7 @@ def find_date(lines,i,vol):
         line=lines[j].strip()
         if not line:continue
         # OCR can read the first '1' as capital I, e.g. 'May I1, 1797'.
-        fixed=re.sub(r'(?i)\\b('+MON+r')\\s+[Ii](?=\\d\\b)', lambda m:m.group(1)+' 1',line)
+        fixed=re.sub(r'(?i)\b('+MON+r')\s+[Ii](?=\d\b)', lambda m:m.group(1)+' 1',line)
         match=DATE.search(fixed)
         if not match:continue
         if re.search(r'\.{3,}',line):return
