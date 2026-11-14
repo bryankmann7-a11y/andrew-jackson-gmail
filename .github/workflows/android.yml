@@ -126,19 +126,19 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
       - name: Publish Android APK release
-        if: startsWith(github.event.head_commit.message, 'Release Jackson Letters v3.2.0')
+        if: startsWith(github.event.head_commit.message, 'Release Jackson Letters v3.3.0')
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
-          cp app/build/outputs/apk/debug/app-debug.apk JacksonLetters-v3.2.0.apk
-          sha256sum JacksonLetters-v3.2.0.apk > JacksonLetters-v3.2.0.sha256
-          if gh release view v3.2.0 >/dev/null 2>&1; then
-            gh release upload v3.2.0 JacksonLetters-v3.2.0.apk JacksonLetters-v3.2.0.sha256 --clobber
+          cp app/build/outputs/apk/debug/app-debug.apk JacksonLetters-v3.3.0.apk
+          sha256sum JacksonLetters-v3.3.0.apk > JacksonLetters-v3.3.0.sha256
+          if gh release view v3.3.0 >/dev/null 2>&1; then
+            gh release upload v3.3.0 JacksonLetters-v3.3.0.apk JacksonLetters-v3.3.0.sha256 --clobber
           else
-            gh release create v3.2.0 JacksonLetters-v3.2.0.apk JacksonLetters-v3.2.0.sha256 \
+            gh release create v3.3.0 JacksonLetters-v3.3.0.apk JacksonLetters-v3.3.0.sha256 \
               --target "$GITHUB_SHA" \
-              --title "Jackson Letters v3.2.0" \
+              --title "Jackson Letters v3.3.0" \
               --notes-file RELEASE_NOTES.md
           fi
