@@ -1,6 +1,6 @@
 # Jackson Letters — Polish checklist
 
-Current baseline: Android WebView APK with the six Bassett OCR volumes; about 2,117 automatically extracted correspondence candidates (not 2,117 verified historical letter transcripts), 13 labelled plain-English renderings, and a Gmail / SMS-style UI. Work must preserve raw source text and identify conjecture rather than fabricating letters.
+Current baseline: Android WebView APK with the six Bassett OCR volumes; 2,116 automatically extracted correspondence candidates (not 2,116 verified historical letter transcripts), 24 labelled plain-English renderings, and a Gmail / SMS-style UI. Work must preserve raw source text and identify conjecture rather than fabricating letters.
 
 ## P0 — Fix what blocks normal use
 
@@ -27,7 +27,7 @@ Current baseline: Android WebView APK with the six Bassett OCR volumes; about 2,
 
 ## P2 — Content and product quality
 
-- [x] **P2-00b Targeted OCR editorial batch (November 2026).** Audited all six volumes; 221 of 2,116 candidate entries flagged for manual source review. Saved a generated CSV review queue in GitHub Actions. Corrected clear name variants, added document-level OCR warnings in Gmail/SMS views, and added eleven hand-edited modern-English reading aids to the existing thirteen (24 total). The archive remains unverified overall; do not mistake these mechanical or editorial improvements for scan checking.
+- [x] **P2-00b Targeted OCR editorial batch (November 2026).** Audited all six volumes; 253 of 2,116 candidate entries are flagged for manual source review under the expanded checks. Saved a generated CSV review queue in GitHub Actions. Corrected common digit-corrupted words and clear name variants (including William B. Lewis), added document-level OCR warnings in Gmail/SMS views, and added eleven hand-edited modern-English reading aids to the existing thirteen (24 total). The archive remains unverified overall; do not mistake these mechanical or editorial improvements for scan checking.
 
 
 - [x] **P2-00 Automated OCR display cleanup.** Remove printed page headers/page numbers from readable copies; rejoin words split across pages; explicitly flag embedded unreadable symbols, e.g. `John$-11called` → `John [unclear OCR] called`; preserve verbatim `original` field. Filter a known misclassified table-of-contents item and test fixes against all six volumes. Further source-by-source corrections remain open.
