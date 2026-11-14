@@ -55,6 +55,8 @@ jobs:
         run: |
           node --check app/src/main/assets/reader_ui.js
           node tools/test_reader_ui.cjs
+      - name: Check standalone HTML archive export
+        run: node tools/test_export.cjs
       - name: Verify Gmail conversation threading
         run: |
           node --check app/src/main/assets/threading.js
