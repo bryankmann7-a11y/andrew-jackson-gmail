@@ -119,6 +119,41 @@ The territory's population appears to entitle it to two congressional representa
 
 [Condensed; the full OCR text continues with other remarks.]""",
 }
+# The same-day Jackson/Sevier exchange has two different authors:
+# index by sender as well as recipient to avoid putting one man's words in the other's mouth.
+DIALOGUE={
+ '1797-05-08|Andrew Jackson|John Sevier': """Sir,
+
+Your friendly letters while I was in Philadelphia made me think you understood why I criticized your official conduct at a militia election. I believed I had the right, as a citizen, to express an opinion about a governor's official acts.
+
+Imagine my surprise on returning to learn that, while writing those friendly letters, you had privately referred to me as a petty lawyer whose criticism you despised. I do not think my conduct justified such language.
+
+Here is what happened: I attended the militia officers' election as a private citizen and did not intend to interfere. But Joel Lewis produced a private letter from you in support of the idea that the governor could delegate his constitutional duties. I thought that set a dangerous precedent. I objected sharply and said I regretted having to expose the governor's ignorance on that point. My objection was to the official action, not an attack on your private character.
+
+Why write insulting private letters about me instead of addressing your complaint directly to me? I expect an explanation and redress for the injury to my reputation.
+
+I also wonder whether you authorized Lewis to use your letter to influence that election.
+
+[Condensed from the printed OCR, not verified against the manuscript.]""",
+ '1797-05-08|John Sevier|Andrew Jackson': """Sir,
+
+I have received your letter today and will answer it as plainly as I can. I seek peace with others, but I cannot remain silent when my reputation is attacked.
+
+I sent blank commissions for the cavalry officers to General Robertson because I believed it was within my authority, not because I wished to advance a faction. If I violated the Constitution, I am answerable to the proper authorities.
+
+I heard that you had spoken harshly and unfairly about my official conduct. At the time I viewed you as an enemy and used angry language in private letters, including some of the expressions you quote. Later explanations from Robertson and Judge Claiborne softened my resentment, and I concluded that I should not treat you as a personal enemy even if I still disagreed with your criticism.
+
+That is why my letters to you in Philadelphia were friendly. They were not intended as a deception.
+
+My reputation is my greatest treasure after years of public life, and I have worked to earn the confidence of the people of Tennessee. I did not write from malice; I wrote as a man who believed himself injured. I admit that anger can make me less measured, just as it can you.
+
+Your obedient servant.
+
+Postscript: I request an answer.
+
+[Condensed from the printed OCR, not verified against the manuscript.]""",
+}
+
 CANONICAL = [
 'Waightstill Avery','Daniel Smith','John McKee','John Overton','William Cupples',
 'Nathaniel Macon','Joseph Anderson','Robert Hays','John Sevier','John McNairy',
@@ -203,7 +238,12 @@ def enrich(letters):
         d['textQuality']='uncorrected OCR; mechanically reflowed reading copy is not a transcription check'
         other=d['to'] if d['from']=='Andrew Jackson' else d['from']
         key=d['date']+'|'+other
-        if key in EARLY:
+        dialogue=d['date']+'|'+d['from']+'|'+d['to']
+        if dialogue in DIALOGUE:
+            d['modern']=DIALOGUE[dialogue]
+            d['modernType']='condensed, human-authored rendering checked against printed OCR; not scan-verified'
+            d['summary']='Plain-English correspondence rendering available, with original OCR alongside it.'
+        elif key in EARLY:
             d['modern']=EARLY[key]
             d['modernType']='condensed, human-authored rendering checked against printed OCR; not scan-verified'
             d['summary']='Plain-English rendering available; open the Modern English tab. Compare against Original OCR before quoting.'
