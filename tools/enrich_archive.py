@@ -189,7 +189,7 @@ Postscript: I request an answer.
 EARLY_BY_ID = {
 "basset-1-540838e26cba234": """Sir,
 
-I have read your letter from today. I misunderstood some of its harsh language, thinking it was directed at you rather than at me. Your explanation shows that I was mistaken about that point.
+I have read your letter from today. You explain that the harsh language near its end referred to yourself, not to me. I had understood it differently because people seldom describe their own faults in such severe terms. Your explanation shows that I misunderstood your meaning.
 
 Still, I must speak frankly: the end of our former close friendship continues to hurt me. I do not want to prolong this argument. We can go through life treating each other with the courtesy expected of civilized people, even if the old friendship cannot be restored.
 
