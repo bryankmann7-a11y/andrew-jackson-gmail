@@ -192,9 +192,23 @@
     const badge = d.status === "ocr" ? "Uncorrected OCR" : d.sourceChecked ? "Edited and source checked" : "Earlier adaptation, unchecked";
     let tabs = [["reading",reading],["original","Original OCR"],["background","Background"],["notes","My notes"]].map(pair =>
       "<button class='gmail-tab " + (tab===pair[0]?"active":"") + "' onclick=\"GmailThreadUI.tab('" + escapeHTML(d.id) + "','" + pair[0] + "')\">" + pair[1] + "</button>").join("");
+    const issues = Array.isArray(d.ocrFlags) ? d.ocrFlags : [];
+    const flagLabels = {
+      letter_digit_fusion:"digits fused into words",
+      symbol_in_word:"stray symbols inside words",
+      word_interrupted_by_footnote:"footnote interrupting a word",
+      possible_multiple_documents:"possible mixed letter boundaries",
+      truncated_extraction:"text cut off during extraction",
+      unusually_long_extraction:"unusually long OCR passage",
+      suspicious_correspondent_heading:"uncertain correspondent heading",
+      unclear_scan_text:"unreadable scan fragments"
+    };
+    const auditNote = issues.length ? "<div class='gmail-thread-note'>OCR needs checking: " +
+      escapeHTML(issues.map(x=>flagLabels[x]||x).join("; ")) +
+      ". Compare with the original book scan before quoting.</div>" : "";
     let body = "<div class='gmail-content'><div class='gmail-subdued'>" + escapeHTML(badge) +
       " · " + escapeHTML(d.from) + " → " + escapeHTML(d.to) + "</div>" +
-      "<div class='gmail-tabs'>" + tabs + "</div>" + renderTab(d, tab) +
+      auditNote + "<div class='gmail-tabs'>" + tabs + "</div>" + renderTab(d, tab) +
       "<div class='gmail-source'>" + escapeHTML(d.sourceCitation || "Source page not independently verified.") +
       (source ? " · <a href='" + source + "' target='_blank' rel='noopener'>View source book</a>" : "") +
       "</div><div class='gmail-message-actions'><button class='ghost' onclick=\"GmailThreadUI.star('" + escapeHTML(d.id) + "')\">" +
