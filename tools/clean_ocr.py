@@ -30,6 +30,11 @@ MONTH_HEADER = re.compile(
 # Only flag clearly corrupted letter-junk-letter strings.
 # Monetary amounts such as $350 and normal historic spellings are untouched.
 GARBLED = re.compile(r'(?<!\w)([A-Za-z]{3,})[$#@~^*|+][0-9_.\-\\/]{1,8}([A-Za-z]{3,})(?!\w)')
+# Display-only markers for unmistakable OCR junk embedded in a word.
+# Do not guess the intended spelling; the unmodified scan OCR remains in
+# each letter's "original" field, including these damaged fragments.
+FUSED_DIGITS = re.compile(r'(?<![A-Za-z0-9])[A-Za-z]{3,}[0-9]{1,4}[A-Za-z]{3,}(?![A-Za-z0-9])')
+FUSED_SYMBOLS = re.compile(r'(?<![A-Za-z0-9])[A-Za-z]{3,}[$#@~^*|+][A-Za-z]{3,}(?![A-Za-z0-9])')
 PAGE_STITCH = re.compile(r'(?<=\w)-[ \t]*(?:\n[ \t]*){1,3}(?=[a-z])')
 # All matching examples in the six-volume audit were distorted printings of
 # 'William'. Restrict this pattern to the distinctive 1-am ending; do not
@@ -51,6 +56,10 @@ def clean_ocr_text(text):
     s = re.sub(r'(?i)\bDivis1on\b', 'Division', s)
     s = re.sub(r'(?i)\bthou8ands\b', 'thousands', s)
     s = GARBLED.sub(lambda m: m.group(1) + ' [unclear OCR] ' + m.group(2), s)
+    # Remaining fused digit/symbol words are illegible OCR, not English.
+    # Leave historic years, dollar amounts and short legitimate identifiers alone.
+    s = FUSED_DIGITS.sub('[unclear OCR]', s)
+    s = FUSED_SYMBOLS.sub('[unclear OCR]', s)
     # Collapsing excess blank lines before stitching handles a page break
     # where the printed running header occupied multiple blank lines.
     s = re.sub(r'\n[ \t]*\n(?:[ \t]*\n)+', '\n\n', s)
