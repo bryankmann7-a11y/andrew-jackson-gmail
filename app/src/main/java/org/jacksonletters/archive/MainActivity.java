@@ -60,6 +60,8 @@ public final class MainActivity extends Activity {
           String mime="text/plain";
           if(path.equals("/")||path.equals("/index.html")){
             input=getAssets().open("index.html");mime="text/html";
+          }else if(path.equals("/reader_ui.js")){
+            input=getAssets().open("reader_ui.js");mime="application/javascript";
           }else if(path.equals("/navigation.js")){
             input=getAssets().open("navigation.js");mime="application/javascript";
           }else if(path.equals("/sms_view.js")){
