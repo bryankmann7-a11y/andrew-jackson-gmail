@@ -36,6 +36,15 @@ jobs:
         run: python3 tools/test_archive.py
       - name: Check cleaned OCR reading copies
         run: python3 tools/test_ocr_clean.py
+      - name: Verify editorial OCR review queue and new readable letters
+        run: python3 tools/test_ocr_review.py
+      - name: Upload OCR review queue
+        uses: actions/upload-artifact@v4
+        with:
+          name: JacksonLetters-OCR-Review
+          path: reports/ocr_review.csv
+          if-no-files-found: error
+          retention-days: 30
       - name: Verify Gmail conversation threading
         run: |
           node --check app/src/main/assets/threading.js
