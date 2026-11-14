@@ -16,6 +16,13 @@ samples={
  "basset-1-06465203ac3cd4e":("1798-01-25","Robert Hays",["France","Duck River"]),
  "basset-1-a440eef6ccfec38":("1798-06-24","William Cocke",["confidential","Senate"]),
  "basset-1-a52ce575b2cd058":("1798-06-24","John Sevier",["Irwin","treaty"]),
+ "basset-1-9e869e7885e988a":("1799-03-27","Andrew Jackson",["Mrs. Jackson","Hammond"]),
+ "basset-1-aa7f6f673d41b47":("1803-10-02","John Sevier",["governor","pistols"]),
+ "basset-1-32f7d2dac87b636":("1804-01-07","John Coffee",["$25,000","$40,000"]),
+ "basset-1-a05bb0177e766ab":("1804-04-06","Mrs. Jackson",["My love","poverty"]),
+ "basset-1-14ea21c23102551":("1806-11-12","Thomas Jefferson",["three regiments","twenty days"]),
+ "basset-1-719ea98a3509ec1":("1806-11-17","Daniel Smith",["Burr","cannot confirm"]),
+ "basset-1-3ba8d6b99e16837":("1806-12-19","Andrew Jackson",["Seth Pease","confidential"]),
 }
 for uid,(date,person,words) in samples.items():
  d=by_id[uid]
