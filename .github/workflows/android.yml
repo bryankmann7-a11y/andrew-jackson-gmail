@@ -32,6 +32,8 @@ jobs:
         run: |
           python3 tools/build_archive.py
           test -s app/src/main/assets/archive/corpus.json
+      - name: Verify correspondence integrity
+        run: python3 tools/test_archive.py
       - name: Preserve debug signing key across future versions
         uses: actions/cache@v4
         with:
