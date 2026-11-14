@@ -183,6 +183,58 @@ Postscript: I request an answer.
 [Condensed from the printed OCR, not verified against the manuscript.]""",
 }
 
+# Hand-edited modern-English summaries of short, identifiable OCR passages.
+# These are abbreviated reading aids, not verbatim quotations or scan-verified
+# diplomatic transcriptions. Stable IDs refer to *raw* Bassett OCR segments.
+EARLY_BY_ID = {
+"basset-1-540838e26cba234": """Sir,
+
+I have read your letter from today. I misunderstood some of its harsh language, thinking it was directed at you rather than at me. Your explanation shows that I was mistaken about that point.
+
+Still, I must speak frankly: the end of our former close friendship continues to hurt me. I do not want to prolong this argument. We can go through life treating each other with the courtesy expected of civilized people, even if the old friendship cannot be restored.
+
+You may have a copy of your letter whenever you wish, as long as I retain it.
+
+Your obedient servant.
+
+[Condensed from the printed OCR; the original letter has not been checked against the scan.]""",
+"basset-1-06465203ac3cd4e": """Dear Colonel,
+
+I have written you many letters since leaving home and received no reply. Except for Captain Caffery, none of my friends have written. Please tell me why.
+
+Reports from our commissioners in France are contradictory. We know they were politely received by the foreign minister, but it is unclear whether the French government has officially recognized them. France seems to be preparing an attack on Ireland and England. That might benefit America, though a sudden French peace with Britain could leave our own country vulnerable.
+
+I am sending newspaper debates from Congress and have sent other papers to Nashville. I have not yet made arrangements for our trading business. I am waiting to hear from you and from General Winchester.
+
+Please tell me how the land dispute involving Sandy, Bledsoe's heirs, and Donelson was settled. A treaty with the Cherokees is planned for spring, and the government may purchase land from them. If the Tennessee River becomes a boundary, land along Duck River could become valuable. Hold what you own and consider acquiring more.
+
+Give my respects to your wife.
+
+[Condensed from the printed OCR. Editorial footnotes and some qualifications are omitted.]""",
+"basset-1-a440eef6ccfec38": """Sir,
+
+You made a private, confidential letter of mine public and accused me of using it to deceive you. You have also told people that I acted dishonestly toward you in your election to the Senate.
+
+I regard these as serious injuries to my reputation. Your explanation for publishing the letter rests on information that, after investigation, I believe to be false.
+
+I therefore demand that you repair the harm you have done, as a gentleman should, or meet me and give the satisfaction one gentleman owes another for such an insult. The man delivering this letter has authority to act for me in arranging the matter.
+
+Your humble servant.
+
+[Condensed from the printed OCR. The demand for 'satisfaction' is historical language associated with an affair of honor; do not treat this as a verified verbatim quotation.]""",
+"basset-1-a52ce575b2cd058": """Dear Sir,
+
+Thank you for your letter carried by Mr. Irwin, and for introducing me to him. I find him an agreeable young man and would gladly show him every courtesy I can.
+
+I am sorry that circumstances prevent me from seeing you at the treaty. I would write more, but time and unpleasant business are pressing upon me.
+
+Please give my warmest regards to your wife. I remember her kindness and courtesy with gratitude.
+
+With great esteem, your obedient servant.
+
+[Condensed from the letter portion of the printed OCR; intervening editorial footnotes are omitted. This is not a scan-verified transcription.]""",
+}
+
 CANONICAL = [
 'Waightstill Avery','Daniel Smith','John McKee','John Overton','William Cupples',
 'Nathaniel Macon','Joseph Anderson','Robert Hays','John Sevier','John McNairy',
@@ -201,19 +253,19 @@ ALIASES={
  'joun mcnairy':'John McNairy','joun mcnarry':'John McNairy',
  'john mcnarry':'John McNairy','john mcnatry':'John McNairy',
  'daniel smith':'Daniel Smith','nathaniel macon':'Nathaniel Macon',
- 'john overton':'John Overton','robert hays':'Robert Hays',
+ 'john overton':'John Overton','john oveertonn':'John Overton','robert hays':'Robert Hays',
  'rozpert hays':'Robert Hays','rosert hays':'Robert Hays',
  'john sevier':'John Sevier','joun sevier':'John Sevier','johnn sevier':'John Sevier',
  'joseph anderson':'Joseph Anderson','william cupples':'William Cupples',
- 'john coffee':'John Coffee','johnn coffee':'John Coffee','joun coffee':'John Coffee',
+ 'john coffee':'John Coffee','johnn coffee':'John Coffee','joun coffee':'John Coffee','jouhn coffee':'John Coffee',
  'john h. eaton':'John H. Eaton','joun h. eaton':'John H. Eaton',
  'francis p. blair':'Francis P. Blair','francis p. blarr':'Francis P. Blair',
  'francis p. brarr':'Francis P. Blair','francis p. biarr':'Francis P. Blair',
  'francis p. buarr':'Francis P. Blair','francis p. blatr':'Francis P. Blair',
  'francis p. bair':'Francis P. Blair','francis p. barr':'Francis P. Blair',
  'francis p. bratr':'Francis P. Blair',
- 'andrew j. donelson':'Andrew J. Donelson','andrew j. donelson':'Andrew J. Donelson',
- 'james k. pork':'James K. Polk','james k. polk':'James K. Polk',
+ 'andrew j. donelson':'Andrew J. Donelson','andrew j. doneetson':'Andrew J. Donelson','andrew j. donnelson':'Andrew J. Donelson',
+ 'james k. pork':'James K. Polk','james k. polk':'James K. Polk','james k. porx':'James K. Polk',
  'thomas pinckney':'Thomas Pinckney','tuomas pinckney':'Thomas Pinckney',
  'thomas h. benton':'Thomas H. Benton','tuomas h. benton':'Thomas H. Benton',
  'edward livingston':'Edward Livingston','epwarp livingston':'Edward Livingston',
@@ -265,11 +317,17 @@ def enrich(letters):
         d['readable']=reading_copy(d['original'])
         d['textQuality']='uncorrected OCR; page furniture removed and suspicious spans flagged in reading copy, not checked against scan'
         d['ocrUnclearSpans']=d['readable'].count('[unclear OCR]')
-        d['needsReview']=d.get('needsReview',False) or bool(d['ocrUnclearSpans'])
+        from ocr_audit import audit_letter
+        d['ocrFlags']=audit_letter(d)
+        d['needsReview']=d.get('needsReview',False) or bool(d['ocrFlags'])
         other=d['to'] if d['from']=='Andrew Jackson' else d['from']
         key=d['date']+'|'+other
         dialogue=d['date']+'|'+d['from']+'|'+d['to']
-        if dialogue in DIALOGUE:
+        if d['id'] in EARLY_BY_ID:
+            d['modern']=EARLY_BY_ID[d['id']]
+            d['modernType']='condensed, human-authored rendering checked against printed OCR; not scan-verified'
+            d['summary']='Plain-English rendering available; compare it with Original OCR before quoting.'
+        elif dialogue in DIALOGUE:
             d['modern']=DIALOGUE[dialogue]
             d['modernType']='condensed, human-authored rendering checked against printed OCR; not scan-verified'
             d['summary']='Plain-English correspondence rendering available, with original OCR alongside it.'
