@@ -4,8 +4,8 @@ Current baseline: Android WebView APK with the six Bassett OCR volumes; about 2,
 
 ## P0 — Fix what blocks normal use
 
-- [ ] **P0-01 Installation and updates.** Make a repeatable signed build with a stable application ID and versioning. Test install, update, and parallel-install/migration behavior on Android. Do not assume a new random debug key will upgrade a previous build. Provide one working APK download link.
-- [ ] **P0-02 Actual Android smoke test.** Test on Android emulator/physical phone: first launch, offline launch, inbox, message view, search, star, notes, export/import, device Back, rotation, screen size, and return from background. Confirm no blank screen, WebView exceptions, or freezes.
+- [x] **P0-01 Installation.** Current APK installs successfully on the user's phone. No upgrade or ongoing update system is needed; deliver one final APK when the app is finished.
+- [ ] **P0-02 Actual Android smoke test.** Installation is confirmed by the user; still test first launch, offline launch, inbox, message view, search, star, notes, export/import, device Back, rotation, screen size, and return from background. Confirm no blank screen, WebView exceptions, or freezes.
 - [ ] **P0-03 Start-up and large corpus performance.** Show a real loading state; avoid making one giant synchronous 20-MB+ JSON parse and full-body scan on each keystroke. Measure start-up time, memory, scrolling, and low-end-device behavior.
 - [ ] **P0-04 Distinguish documents that have multiple representations.** Merge the 14 demo/adapted entries with matching real OCR document IDs instead of showing an apparent duplicate; never quietly overwrite the source; retain legacy notes/star links.
 - [ ] **P0-05 Archive verification pipeline.** Detect suspicious dates, implausible names, merges/splits between documents, footnotes, pages and other editorial artifacts. Maintain an audit trail and a 'needs checking' status. Never label OCR automatically 'source-verified.'
@@ -20,7 +20,7 @@ Current baseline: Android WebView APK with the six Bassett OCR volumes; about 2,
 - [ ] **P1-05 Reading controls.** Adjustable text size, line spacing, sepia/dark theme, readable headers and link styling, position memory and a clean distraction-free letter view.
 - [ ] **P1-06 Sources beside every letter.** Show a readable volume, approximate page (when known), stable source URL, OCR quality, and direct access to scanned pages where a verified page locator exists; avoid false precision.
 - [ ] **P1-07 Contacts and conversations.** Normalize only confident name variants, retain original OCR headings, handle similarly named individuals without merging them, and give each correspondent a chronological sent/received timeline.
-- [ ] **P1-08 Notes and local data.** Autosave notes reliably; export/import notes, bookmarks, reading state and user-corrected names; backup and upgrade/migration test. Avoid silent loss on uninstall or reinstall.
+- [ ] **P1-08 Notes and local data.** Autosave notes reliably; export/import notes, bookmarks, reading state and user-corrected names; backup/export test. Avoid silent loss during normal use.
 - [ ] **P1-09 Accessibility.** Large tap targets, labels and semantic controls, TalkBack reading order, contrast, Dynamic Type/font scaling, and keyboard focus.
 
 ## P2 — Content and product quality
@@ -34,11 +34,11 @@ Current baseline: Android WebView APK with the six Bassett OCR volumes; about 2,
 
 ## Working order
 
-1. Fix installation/update path and Android navigation (P0-01, P0-02, P1-01).
+1. Fix Android navigation and verify phone behavior (P0-02, P1-01). Installation already works.
 2. Fix loading/search responsiveness and duplicates (P0-03, P0-04, P1-03).
 3. Clean the inbox, chat, and reader (P1-02, P1-04, P1-05).
 4. Improve document verification, sources, and editorial statuses (P0-05, P1-06, P2-01).
 5. Expand human-checked modern-English editions progressively (P2-02).
 6. Finish profiles, styling and regression testing.
 
-Definition of done: an APK users can install or upgrade predictably, works offline, renders and searches the corpus smoothly on Android, doesn't lose local data unexpectedly, and unambiguously distinguishes original OCR, editorial summaries, and historically verified content.
+Definition of done: one final APK the user can install, which works offline, renders and searches the corpus smoothly on Android, doesn't lose local data unexpectedly, and unambiguously distinguishes original OCR, editorial summaries, and historically verified content. The user does not require post-release app updates.
