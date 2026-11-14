@@ -59,7 +59,7 @@ Your letter of April 17 gave me strong hopes for general peace with the southern
 
 I fear that the peace talks are intended to mislead us and make us less watchful. In my view, treaties have made it easier for attackers to enter settlements. I do not understand Congress's continuing preference for negotiation. Some say humanity requires it, but humanity ought to extend equally to American citizens.
 
-Our own citizens have been prosecuted for marching into Native towns and killing people. Why should we not demand, under the treaty, that the murderers of our citizens be surrendered? If they are not given up, Jackson argues, it would violate the treaty and provide a cause for war. He further argues that a nation refusing to surrender offenders should share responsibility for the crime.
+Our own citizens have been prosecuted for marching into Native towns and killing people. Why should we not demand, under the treaty, that the murderers of our citizens be surrendered? If they are not given up, I regard that as a violation of the treaty and grounds for war. In my opinion, a nation that refuses to surrender the perpetrators should share responsibility for the crime.
 
 I dread the coming summer. Frontier settlers are discouraged, and some are leaving for Kentucky. Unless Congress offers better protection, I fear the country will weaken or seek protection from another power.
 
@@ -173,6 +173,8 @@ def normalize_person(name):
     n=re.sub(r'\s+',' ',raw.strip()).title()
     n=re.sub(r'\bJoun\b|\bJonn\b|\bJohnn\b','John',n)
     n=re.sub(r'\bTuomas\b','Thomas',n)
+    n=re.sub(r'\bMckee+\b','McKee',n,flags=re.I)
+    n=re.sub(r'\bSeviee?r\b','Sevier',n,flags=re.I)
     n=re.sub(r'\bRozpert\b|\bRosert\b','Robert',n)
     n=re.sub(r'\bEpwarp\b','Edward',n)
     n=re.sub(r'\bAnprew\b','Andrew',n)
