@@ -32,6 +32,11 @@ jobs:
         run: |
           python3 tools/build_archive.py
           test -s app/src/main/assets/archive/corpus.json
+      - name: Preserve debug signing key across future versions
+        uses: actions/cache@v4
+        with:
+          path: ~/.android/debug.keystore
+          key: jacksonletters-debug-signing-v1
       - name: Build APK
         run: gradle --no-daemon assembleDebug
       - name: Upload APK
