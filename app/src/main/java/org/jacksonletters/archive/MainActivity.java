@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Build;
+import android.window.OnBackInvokedCallback;
+import android.window.OnBackInvokedDispatcher;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
@@ -26,6 +29,7 @@ public final class MainActivity extends Activity {
   private final AtomicBoolean cancelled = new AtomicBoolean(false);
   private final Object lock = new Object();
   private WebView web;
+  private OnBackInvokedCallback backCallback;
   private ValueCallback<Uri[]> fileChooser;
   private CountDownLatch volumeLatch;
   private boolean volumeSuccess;
@@ -56,6 +60,8 @@ public final class MainActivity extends Activity {
           String mime="text/plain";
           if(path.equals("/")||path.equals("/index.html")){
             input=getAssets().open("index.html");mime="text/html";
+          }else if(path.equals("/navigation.js")){
+            input=getAssets().open("navigation.js");mime="application/javascript";
           }else if(path.equals("/sms_view.js")){
             input=getAssets().open("sms_view.js");mime="application/javascript";
           }else if(path.equals("/threading.js")){
@@ -97,6 +103,24 @@ public final class MainActivity extends Activity {
     });
     setContentView(web);
     web.loadUrl("https://appassets.androidplatform.net/index.html");
+    if(Build.VERSION.SDK_INT >= 33){
+      backCallback = () -> handleNavigationBack();
+      getOnBackInvokedDispatcher().registerOnBackInvokedCallback(OnBackInvokedDispatcher.PRIORITY_DEFAULT,backCallback);
+    }
+  }
+
+  private void handleNavigationBack(){
+    if(web==null){finish();return;}
+    web.evaluateJavascript(
+      "(function(){try{return !!(window.JacksonNav&&window.JacksonNav.back());}catch(e){return false;}})();",
+      result -> {if(!"true".equals(result))finish();}
+    );
+  }
+  @Override @SuppressWarnings("deprecation")
+  public void onBackPressed(){handleNavigationBack();}
+  @Override public void onConfigurationChanged(android.content.res.Configuration newConfig){
+    super.onConfigurationChanged(newConfig);
+    if(web!=null)web.invalidate();
   }
 
   private File bookFile(int v){
@@ -220,6 +244,10 @@ public final class MainActivity extends Activity {
     }
   }
   @Override protected void onDestroy(){
+    if(Build.VERSION.SDK_INT>=33 && backCallback!=null){
+      getOnBackInvokedDispatcher().unregisterOnBackInvokedCallback(backCallback);
+      backCallback=null;
+    }
     cancelled.set(true);worker.shutdownNow();
     if(web!=null){web.destroy();web=null;}
     super.onDestroy();
