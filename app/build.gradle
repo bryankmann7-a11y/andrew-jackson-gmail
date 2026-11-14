@@ -4,6 +4,6 @@ plugins {
 android {
     namespace 'org.jacksonletters.archive'
     compileSdk 35
-    defaultConfig { applicationId 'org.jacksonletters.archive.parallelv3'; minSdk 26; targetSdk 34; versionCode 4; versionName '3.2.0' }
+    defaultConfig { applicationId 'org.jacksonletters.archive.parallelv3'; minSdk 26; targetSdk 34; versionCode 5; versionName '3.3.0' }
     compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
 }
