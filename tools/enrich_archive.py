@@ -316,6 +316,109 @@ With great esteem, your obedient servant.
 [Condensed from the letter portion of the printed OCR; intervening editorial footnotes are omitted. This is not a scan-verified transcription.]""",
 }
 
+
+# Further short, identifiable entries paraphrased directly from the preserved
+# printed OCR reading copies. Scan and attribution remain unverified.
+EARLY_BY_ID.update({
+"basset-1-2083f23d6268b7f": """My dear friend,
+
+I have just received your letter of November 12. I am ready to lay down my life for my country. I recognize the patriotism, honor, virtue, and friendship in your words, and those qualities will always have my warmest esteem.
+
+I will use every means in my power to defend our country, its government, and its laws.
+
+Please give my affectionate regards to Mrs. Jackson. May God bless you.
+
+Your faithful friend.
+
+[Plain-English adaptation of the printed OCR; not verified against the manuscript.]""",
+
+"basset-1-8f8443529d1e5b9": """Dear Sir,
+
+Colonel Burr's activities have troubled the government more than almost anything else lately, but officials now believe the danger is nearly over. Ohio Governor Tiffin has stopped ten boats carrying provisions for Burr. Two of Burr's associates, Blennerhassett and Comfort Tyler, have fled, and many young men who had set out to join them have gone home.
+
+You are nearer the events and probably receive news before we do. Mail from the South and West is extremely unreliable, especially mail from New Orleans. Even if a letter arrives this evening, the return mail will leave too quickly for me to answer it.
+
+There is a rumor that a foreign power intends to attack New Orleans from the sea, but I find it hard to believe. General Wilkinson is there, and his army was following him according to our latest information. The president continues to place confidence in him.
+
+[Condensed from the printed OCR. The final words of the passage are damaged; consult the original before quoting.]""",
+
+"basset-1-4a74504242600a4": """To the officers of the Second Division,
+
+As ordered on January 2, have the men assigned to service assemble and be mustered on January 8, 9, and 10. Men from the Fourth Brigade must report at Gallatin, those from the Fifth at Nashville, and those from the Sixth at Springfield.
+
+If you have not received marching orders when the men are mustered, send them back to their homes with instructions to remain ready to march at a moment's notice.
+
+I have appointed Captain James Desha as mustering officer. All officers and soldiers must recognize his authority and obey him in that role.
+
+[Modern-English rendering of the letter. Editorial footnotes included in the scanned text have been omitted.]""",
+
+"basset-1-14fb0396d9f7105": """Sir,
+
+Your letter answering mine of January 2 arrived by express last evening. Thank you for responding so promptly.
+
+Many alarming rumors have stirred the public, and I am glad to learn that they have no basis in fact. Those rumors have reached the government and led some people to think the western country is not loyal to the Union. That is a baseless slander, probably spread by people with improper motives.
+
+I can assure you that we are firmly attached to our government and to the Union. Our feeling is united: together we stand, divided we fall.
+
+Doctors Claiborne and Bedford, who carry this letter on their way to New Orleans, are responsible and well-informed gentlemen. Although we have not met, I hope you will receive them courteously. They can also tell you the latest news.
+
+With due respect, your obedient servant.
+
+[Modern-English adaptation of the printed OCR; not manuscript-verified.]""",
+
+"basset-1-0bef28e4e0ea918": """Sir,
+
+I enclose a duplicate of the order previously addressed to you at New Orleans.
+
+You are to turn over all United States military supplies and other government property in the possession of your detachment to the commanding officer at Fort Massac.
+
+I have the honor to remain, sir, your servant.
+
+[Plain-English adaptation of the short printed OCR passage; wording of the closing is abbreviated in the source.]""",
+
+"basset-1-ecb2fd48c873b49": """Sir,
+
+I received your letter dated February 16, 1813, this evening while traveling through the Choctaw Nation, about sixteen miles northeast of Mr. Cravens's place near the boundary. Your letter had been postmarked in Washington on February 23 and in Knoxville on March 2.
+
+I have made reasonably good progress with the sick men under my care. I expect to reach Nashville in twenty-five or thirty days. I also expect that, by then, the proper officers will have the funds needed to discharge the detachment under my command.
+
+I have turned over to the assistant deputy quartermaster at Cantonment Washington all government property that could be spared without depriving the sick of what they need.
+
+[Modern-English rendering of the printed OCR; the original remains available for comparison.]""",
+
+"basset-1-6d3b1f49751084d": """Sir,
+
+I received your letter of March 22 today and enclose a copy of the letter I sent you on that same date.
+
+You will see that there was no intention to treat the soldiers under your command harshly or disrespectfully. If the order of February 6 had found your troops still at New Orleans, paying them would have been part of the port commander's duties.
+
+The expectation, however, was that the order would reach you after you had already begun your journey, at a place where payment could not be made.
+
+I have the honor to remain your servant.
+
+[Modern-English adaptation of the printed OCR; the original closing is abbreviated in the edition.]""",
+
+"basset-1-56e95462436fc35": """I received the message you sent through your son and Mr. Quarles. Do not lose heart. If the hostile Creek forces attack you, hold your position for a few days, and I will come to your relief.
+
+I am determined to protect you, your family, and those in your community who are friendly to the Americans. If any of you are harmed, I will exact severe retribution. I have an army strong enough to restore peace to your country and confront the hostile forces, and more men will soon join me.
+
+I intend to leave this camp late today and reach your fort within four days at the most. Keep your courage, and tell your men they have nothing to fear.
+
+Respectfully.
+
+[Condensed modern-English rendering. Jackson's original language threatens to sacrifice a hundred lives in retaliation; the full wording is preserved in the Original OCR tab.]""",
+
+"basset-1-962a97d2936f7b8": """Order to the commander of the volunteer cavalry:
+
+As soon as the troops have been paid, detach companies or battalions under a lieutenant colonel and Major Lodderdale [name as rendered by the OCR]. They are to proceed by forced marches to Huntsville.
+
+Allow a rumor to spread among the Creek people that this force is marching to defend Mobile and that it represents the entire organized force.
+
+I will deliver your marching orders tomorrow, expecting that you can march on Monday with the full detachment.
+
+[Plain-English adaptation of the printed OCR; the name and specific military details require comparison with the scan.]""",
+})
+
 CANONICAL = [
 'Waightstill Avery','Daniel Smith','John McKee','John Overton','William Cupples',
 'Nathaniel Macon','Joseph Anderson','Robert Hays','John Sevier','John McNairy',
