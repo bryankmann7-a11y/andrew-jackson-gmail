@@ -99,7 +99,7 @@ def clean_name(s):
     return ' '.join(w.capitalize() if w.isupper() else w for w in s.split())
 
 def heading(line):
-    s=line.strip()
+    s=line.strip().rstrip('?”’ ')
     if not 7<=len(s)<=115 or any(ch.isdigit() for ch in s):return
     # Most real headings are titlecase or uppercase, and isolated on a line.
     if re.search(r'(\.{3,}|[_]{3,}|[!?;:])',s):return
@@ -207,6 +207,8 @@ def main():
     for d in all_docs:
         if d['id'] not in ids:
             ids[d['id']]=1; kept.append(d)
+    if not any(d['date']=='1788-08-12' and d['from']=='Andrew Jackson' for d in kept):
+        raise RuntimeError('Earliest known 1788 Jackson-to-Avery letter was not extracted; check OCR headings')
     kept.sort(key=lambda x:(x['date'],x['volume'],x['id']))
     bundle={'edition':'Correspondence of Andrew Jackson, John Spencer Bassett, volumes I-VI',
        'status':'Uncorrected scan-derived OCR. Not all original letters survive, and this is not an exhaustive list.',
