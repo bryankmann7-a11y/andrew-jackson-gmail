@@ -22,6 +22,6 @@ Do not quote the OCR as verified historical wording without checking the origina
 
 ## Development and test status
 
-The repository builds an installable APK with GitHub Actions, runs archival and UI-logic regression tests, and runs an offline Android emulator smoke test as part of its release workflow. A passing emulator launch does not replace checking the final installation on the user's physical phone.
+The repository builds an APK with GitHub Actions and runs archival, OCR, interface logic, import/export, and Android compilation checks. An optional Android emulator smoke check exists, but hosted emulator provisioning did not finish reliably during release preparation. The final APK still needs a short check on a physical phone.
 
 See [release notes](RELEASE_NOTES.md) and [polish and verification checklist](POLISH_CHECKLIST.md) for limits and remaining editorial work.
