@@ -25,9 +25,12 @@ def audit_letter(letter):
     raw = letter.get("original", "")
     readable = letter.get("readable", "")
     flags = []
-    if LETTER_DIGIT.search(readable):
+    # Scan the untouched OCR too: the display copy now hides unmistakably
+    # garbled words behind [unclear OCR], but the review queue must retain
+    # the reason they were flagged for inspection.
+    if LETTER_DIGIT.search(raw) or LETTER_DIGIT.search(readable):
         flags.append("letter_digit_fusion")
-    if MIDWORD_SYMBOL.search(readable):
+    if MIDWORD_SYMBOL.search(raw) or MIDWORD_SYMBOL.search(readable):
         flags.append("symbol_in_word")
     if INTERRUPTED_WORD.search(raw):
         flags.append("word_interrupted_by_footnote")
