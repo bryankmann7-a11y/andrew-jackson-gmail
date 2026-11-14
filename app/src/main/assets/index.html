@@ -300,6 +300,7 @@ async function loadBundledCorrespondence(){
      notice.innerHTML='<b>'+archive.letters.length.toLocaleString()+' extracted letter candidates bundled offline</b> from six published volumes. The historical text is <b>uncorrected OCR</b>, not a modern-English rewrite. Names, boundaries, pages and replies may need verification. The older starter adaptations are marked separately.';
      notice.style.display='';
    }
+   if(state.id===STARTER_LETTERS[0]?.id && !state.profile){state.id=archive.letters[0].id;state.tab='modern';}
    render();
    if(notice)notice.style.display='';
  }catch(e){
