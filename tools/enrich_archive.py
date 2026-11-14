@@ -359,6 +359,92 @@ ALIASES={
  'postmaster general kendall':'Amos Kendall',
 }
 TITLES=re.compile(r'^(?:brigadier[\s-]*general|major[\s-]*general|colonel|col|gen|general|rev|reverend|dr|mr|mrs|miss|hon)\.?\s+',re.I)
+# These noisy headings all explicitly say '... B. Lewis' and differ only in
+# OCR spellings of William/Lewis and rank; do not apply fuzzy name matching.
+WILLIAM_LEWIS_HEADING=re.compile(r'(?i)^(?:(?:major|mayor)\s+)?w[ilutxr.]{2,12}a{1,2}m{1,2}\s+b[.,]?\s+lew[iyt]+s
+def key_name(s):
+    s=re.sub(r'\s+',' ',str(s).strip())
+    s=re.sub(r'[.,;:!?]+$','',s)
+    return s.lower().replace('—','-')
+
+def normalize_person(name):
+    raw=name.strip()
+    if raw=='Andrew Jackson':return raw
+    n=re.sub(r'\s+',' ',raw.strip()).title()
+    if WILLIAM_LEWIS_HEADING.fullmatch(n):return 'William B. Lewis'
+    n=re.sub(r'\bJoun\b|\bJonn\b|\bJohnn\b','John',n)
+    n=re.sub(r'\bTuomas\b','Thomas',n)
+    n=re.sub(r'\bMckee+\b','McKee',n,flags=re.I)
+    n=re.sub(r'\bSeviee?r\b','Sevier',n,flags=re.I)
+    n=re.sub(r'\bRozpert\b|\bRosert\b','Robert',n)
+    n=re.sub(r'\bEpwarp\b','Edward',n)
+    n=re.sub(r'\bAnprew\b','Andrew',n)
+    n=re.sub(r'\bBlatr\b|\bBlarr\b|\bBiarr\b|\bBrarr\b|\bBuarr\b|\bBair\b','Blair',n)
+    t=TITLES.sub('',n)
+    n=ALIASES.get(key_name(n),ALIASES.get(key_name(t),n))
+    # Explicit role aliases; avoid merging less certain unknowns.
+    for canonical in CANONICAL:
+        if key_name(n)==key_name(canonical):return canonical
+    return n
+
+def reading_copy(s):
+    # Original OCR is retained in the 'original' field, byte-for-byte.
+    from clean_ocr import clean_ocr_text
+    return clean_ocr_text(s)
+
+def enrich(letters):
+    for d in letters:
+        d['ocrFrom']=d['from']
+        d['ocrTo']=d['to']
+        d['from']=normalize_person(d['from'])
+        d['to']=normalize_person(d['to'])
+        d['subject']=d['from']+' to '+d['to']+' ('+d['date']+')'
+        d['readable']=reading_copy(d['original'])
+        d['textQuality']='uncorrected OCR; page furniture removed and suspicious spans flagged in reading copy, not checked against scan'
+        d['ocrUnclearSpans']=d['readable'].count('[unclear OCR]')
+        from ocr_audit import audit_letter
+        d['ocrFlags']=audit_letter(d)
+        d['needsReview']=d.get('needsReview',False) or bool(d['ocrFlags'])
+        other=d['to'] if d['from']=='Andrew Jackson' else d['from']
+        key=d['date']+'|'+other
+        dialogue=d['date']+'|'+d['from']+'|'+d['to']
+        if d['id'] in EARLY_BY_ID:
+            d['modern']=EARLY_BY_ID[d['id']]
+            d['modernType']='condensed, human-authored rendering checked against printed OCR; not scan-verified'
+            d['summary']='Plain-English rendering available; compare it with Original OCR before quoting.'
+        elif dialogue in DIALOGUE:
+            d['modern']=DIALOGUE[dialogue]
+            d['modernType']='condensed, human-authored rendering checked against printed OCR; not scan-verified'
+            d['summary']='Plain-English correspondence rendering available, with original OCR alongside it.'
+        elif key in EARLY:
+            d['modern']=EARLY[key]
+            d['modernType']='condensed, human-authored rendering checked against printed OCR; not scan-verified'
+            d['summary']='Plain-English rendering available; open the Modern English tab. Compare against Original OCR before quoting.'
+        else:
+            d['modern']=''
+            d['modernType']='not yet written'
+        d['needsReview']=d.get('needsReview',False) or len(d.get('original',''))>18000
+        d['replyToId']=None
+        d['replyLinkStatus']='no matched surviving earlier letter identified'
+    # Only create conservative *suggested* reply links between opposite-direction
+    # letters to the same person within two weeks, with textual reply language.
+    previous=defaultdict(list)
+    for d in sorted(letters,key=lambda x:(x['date'],x['id'])):
+        other=d['to'] if d['from']=='Andrew Jackson' else d['from']
+        direction='out' if d['from']=='Andrew Jackson' else 'in'
+        inverse='in' if direction=='out' else 'out'
+        if re.search(r'(?i)\b(?:your (?:letter|note)|(?:received|recd\.?|receipt of) your letter|in (?:answer|reply) to)\b',d['original'][:1250]):
+            possibilities=[]
+            for past in previous.get((other,inverse),[])[-8:]:
+                gap=(dt.date.fromisoformat(d['date'])-dt.date.fromisoformat(past['date'])).days
+                if 0<=gap<=14:possibilities.append((gap,past))
+            if len(possibilities)==1:
+                d['replyToId']=possibilities[0][1]['id']
+                d['replyLinkStatus']='possible reply, date/proximity only; not verified'
+        previous[(other,direction)].append(d)
+    return letters
+)
+
 def key_name(s):
     s=re.sub(r'\s+',' ',str(s).strip())
     s=re.sub(r'[.,;:!?]+$','',s)
