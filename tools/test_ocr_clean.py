@@ -16,6 +16,8 @@ def check(raw,expected,absent=()):
 
 check("His opin-\n\n98 Correspondence of Andrew Jackson\n\nion was strong.","opinion",["98 Correspondence"])
 check("It remained hon-\n\n120 Correspondence of Andrew Jackson\n\norable.","honorable")
+check("He has the right to be-\n\nAdd Correspondence of Andrew Jackson\n\nstow the office.","bestow")
+check("An old plate shows\nJackson\nCorrespondence of Andrew\nJackson\nNo further writing.","No further writing.",["Correspondence of Andrew"])
 check("This is his opin98 Correspondence of Andrew Jackson\n\nion.","opinion")
 check("The letter was read.\n\n8 Correspondence of Andrew Jackson\n\nThis answer followed.","This answer followed.",["Correspondence of Andrew Jackson"])
 check("We spoke on Tuesday.\n\nOctober, 1837 515\n\nI wrote again.","I wrote again.",["October, 1837 515"])
@@ -29,7 +31,7 @@ data=json.loads(archive.read_text(encoding="utf-8"))
 docs=data["letters"]
 assert len(docs)>1800
 headers=sum("Correspondence of Andrew Jackson" in d["readable"] for d in docs)
-assert headers<=25, f"Too many page headers remain in reading copies: {headers}"
+assert headers==0, f"Too many page headers remain in reading copies: {headers}"
 assert all(d["original"] and d["readable"] for d in docs)
 assert all(d.get("ocrUnclearSpans",0)==d["readable"].count("[unclear OCR]") for d in docs)
 flagged=sum(d.get("ocrUnclearSpans",0) for d in docs)
