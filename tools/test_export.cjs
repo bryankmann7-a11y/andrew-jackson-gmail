@@ -59,7 +59,7 @@ vm.runInContext(html.slice(start,end)+"\nwindow.saveStandalone=downloadCompiledH
  assert.equal(imported.page,110);
  assert.equal(imported.sourceChecked,false);
  // Java encodes each AndroidBridge chunk separately; never split a surrogate pair.
- const chunkStart=html.indexOf("function safeExportChunks(");
+ const chunkStart=html.indexOf("function* safeExportChunks(");
  const chunkEnd=html.indexOf("\nfunction downloadTemplate()",chunkStart);
  assert.ok(chunkStart>0&&chunkEnd>chunkStart);
  const sent=[];
