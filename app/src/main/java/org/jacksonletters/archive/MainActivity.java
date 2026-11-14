@@ -235,13 +235,17 @@ public final class MainActivity extends Activity {
     if(requestCode==FILE_PICK){
       if(fileChooser!=null){fileChooser.onReceiveValue(resultCode==RESULT_OK&&data!=null&&data.getData()!=null?new Uri[]{data.getData()}:null);fileChooser=null;}
     }else if(requestCode==FILE_SAVE){
-      if(resultCode==RESULT_OK&&data!=null&&data.getData()!=null&&staged!=null){
-        try(InputStream in=new FileInputStream(staged);OutputStream out=getContentResolver().openOutputStream(data.getData())){
-          if(out==null)throw new IOException("Cannot write chosen file");
-          byte[] buf=new byte[16384];int n;while((n=in.read(buf))>0)out.write(buf,0,n);
-          Toast.makeText(this,"Archive saved",Toast.LENGTH_SHORT).show();
-        }catch(Exception e){Toast.makeText(this,"Save failed: "+e.getMessage(),Toast.LENGTH_LONG).show();}
-        finally{staged.delete();staged=null;}
+      try {
+        if(resultCode==RESULT_OK&&data!=null&&data.getData()!=null&&staged!=null){
+          try(InputStream in=new FileInputStream(staged);OutputStream out=getContentResolver().openOutputStream(data.getData())){
+            if(out==null)throw new IOException("Cannot write chosen file");
+            byte[] buf=new byte[16384];int n;while((n=in.read(buf))>0)out.write(buf,0,n);
+            Toast.makeText(this,"Archive saved",Toast.LENGTH_SHORT).show();
+          }catch(Exception e){Toast.makeText(this,"Save failed: "+e.getMessage(),Toast.LENGTH_LONG).show();}
+        }
+      } finally {
+        // A cancelled Android file picker must not leave a full archive in cache.
+        if(staged!=null){staged.delete();staged=null;}
       }
     }
   }
