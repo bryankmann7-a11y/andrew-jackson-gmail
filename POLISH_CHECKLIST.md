@@ -22,7 +22,7 @@ Current baseline: Android WebView APK with the six Bassett OCR volumes; 2,116 au
 - [x] **P1-05 Reading controls.** Adjustable font size, line spacing, paper/sepia/night reading colors, persisted preferences, and returning to the reader's former position via app navigation. Automated checks pass; Android handset visual QA remains open.
 - [ ] **P1-06 Sources beside every letter.** Show a readable volume, approximate page (when known), stable source URL, OCR quality, and direct access to scanned pages where a verified page locator exists; avoid false precision.
 - [ ] **P1-07 Contacts and conversations.** Normalize only confident name variants, retain original OCR headings, handle similarly named individuals without merging them, and give each correspondent a chronological sent/received timeline.
-- [ ] **P1-08 Notes and local data (partially complete).** Autosave notes and export/import personal state; standalone HTML export now includes all four offline reader scripts and data, with regression tests for saved notes. Full Android backup/restore and migration smoke test remains open.
+- [ ] **P1-08 Notes and local data (partially complete).** Note autosave now flushes when the Android app backgrounds; Unicode-safe JSON/HTML exports preserve surrogate-pair characters, and the one-file archive loads offline. Regression tests cover OCR metadata, old stars, and archive content. Physical Android backup/restore remains open.
 - [ ] **P1-09 Accessibility.** Large tap targets, labels and semantic controls, TalkBack reading order, contrast, Dynamic Type/font scaling, and keyboard focus.
 
 ## P2 — Content and product quality
@@ -44,8 +44,8 @@ Current baseline: Android WebView APK with the six Bassett OCR volumes; 2,116 au
 
 ## Latest verified build
 
-- GitHub Actions [run 43626779073](https://github.com/bryankmann7-a11y/andrew-jackson-gmail/actions/runs/43626779073) (commit `47b00aa21c9f6e9405c5955e6fc5d6be8fba80f4`): Python and JavaScript preflight, six-volume download, OCR cleaning, review audit, archive integrity, reader/filter, standalone export, Gmail threading, SMS, navigation and APK build all passed.
-- 2,116 OCR candidates in 1,902 provisional Gmail-style conversations, 33 modern-English reading aids, 286 OCR review candidates, and 43 explicitly marked unreadable fragments. This is a code-and-CI pass, not a manual verification of scans or physical Android smoke test.
+- GitHub Actions [run 43631376655](https://github.com/bryankmann7-a11y/andrew-jackson-gmail/actions/runs/43631376655): archive integrity, OCR review and cleaning, WebView inline startup, Unicode-safe backup/export, notes, historic star migration, conservative SMS/Gmail duplicate handling, Android navigation and APK compilation all passed. Final release should rerun the same checks.
+- 2,116 OCR candidates in 1,902 provisional Gmail-style conversations, 33 modern-English reading aids, 286 OCR review candidates, and 43 explicitly marked unreadable fragments. Physical-device QA and source-by-source historical manuscript verification remain outstanding; automated checks do not certify them.
 
 ## Working order
 
