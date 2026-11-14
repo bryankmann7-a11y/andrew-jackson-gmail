@@ -144,10 +144,11 @@
     }
     return cache;
   }
+  function isStarred(d) {return starred.has(d.id) || Boolean(d._legacyId && starred.has(d._legacyId));}
   function folderMatches(d, folder) {
     if (folder === "out") return d.from === JACKSON;
     if (folder === "in") return d.to === JACKSON;
-    if (folder === "starred") return starred.has(d.id) || Boolean(d._legacyId && starred.has(d._legacyId));
+    if (folder === "starred") return isStarred(d);
     if (folder === "unread") return !read.has(d.id) && !(d._legacyId && read.has(d._legacyId));
     return true;
   }
@@ -167,7 +168,7 @@
     return t.messages.some(d => !read.has(d.id) && !(d._legacyId && read.has(d._legacyId)));
   }
   function starredIn(t) {
-    return t.messages.some(d => starred.has(d.id) || (d._legacyId && starred.has(d._legacyId)));
+    return t.messages.some(isStarred);
   }
   function renderRow(t) {
     const latest = newest(t);
@@ -234,7 +235,7 @@
       "<div class='gmail-source'>" + escapeHTML(d.sourceCitation || "Source page not independently verified.") +
       (source ? " · <a href='" + source + "' target='_blank' rel='noopener'>View source book</a>" : "") +
       "</div><div class='gmail-message-actions'><button class='ghost' onclick=\"GmailThreadUI.star('" + escapeHTML(d.id) + "')\">" +
-      (starred.has(d.id)?"★ Starred":"☆ Star") + "</button><button class='ghost' onclick=\"copyLetter('" + escapeHTML(d.id) + "')\">Copy letter</button>" +
+      (isStarred(d)?"★ Starred":"☆ Star") + "</button><button class='ghost' onclick=\"copyLetter('" + escapeHTML(d.id) + "')\">Copy letter</button>" +
       "<button class='ghost' onclick=\"openProfile('" + safeKey(d.from) + "')\">Sender profile</button></div></div>";
     return "<section class='gmail-message " + (open?"open":"") + "' id='gmail-message-" + escapeHTML(d.id) + "'>" +
       "<button class='gmail-message-head' aria-expanded='" + String(open) + "' onclick=\"GmailThreadUI.toggle('" + escapeHTML(d.id) + "')\">" +
@@ -329,7 +330,13 @@
     tabById.set(id,value); opened.add(id);sync();
   }
   function star(id) {
-    starred.has(id) ? starred.delete(id) : starred.add(id);
+    const d=data.find(x=>x.id===id);
+    if(!d)return;
+    if(isStarred(d)){
+      // A legacy favorite attached to this OCR document must be removable.
+      starred.delete(d.id);
+      if(d._legacyId)starred.delete(d._legacyId);
+    }else starred.add(d.id);
     save(false);sync();
   }
   function saveNote(id) {
