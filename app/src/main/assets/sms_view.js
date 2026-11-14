@@ -153,7 +153,7 @@ function openAsLetter(id){
  state.view="mail";
  if(typeof GmailThreadUI!=="undefined")GmailThreadUI.setExpanded(id);
  selectLetter(id,true);
- $("#viewMode button").forEach(b=>b.classList.toggle("selected",b.dataset.view==="mail"));
+ document.querySelectorAll("#viewMode button").forEach(b=>b.classList.toggle("selected",b.dataset.view==="mail"));
 }
 window.SmsConversationUI={render,toggle,move,jump,openAsLetter,collect,windowFor,messageText};
 })();
