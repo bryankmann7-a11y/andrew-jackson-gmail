@@ -63,8 +63,8 @@ def download(vol):
         return dest.read_text('utf-8','replace')
     ident=IDS[vol]
     urls=[
-        f'https://archive.org/download/{ident}/{ident}_djvu.txt',
         f'https://archive.org/stream/{ident}/{ident}_djvu.txt',
+        f'https://archive.org/download/{ident}/{ident}_djvu.txt',
         f'https://archive.org/download/{ident}/{ident}_full_text.txt',
         f'https://archive.org/download/{ident}/{ident}_text.pdf.txt',
     ]
@@ -73,7 +73,7 @@ def download(vol):
         try:
             print('Downloading',vol,url,flush=True)
             req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 (academic correspondence research)','Accept':'text/plain,text/html,*/*'})
-            with urllib.request.urlopen(req,timeout=150) as resp:
+            with urllib.request.urlopen(req,timeout=25) as resp:
                 if int(resp.status)!=200:raise RuntimeError(f'HTTP {resp.status}')
                 raw=resp.read(25_000_001)
             if len(raw)>25_000_000:raise RuntimeError('source larger than OCR limit')
@@ -87,7 +87,7 @@ def download(vol):
         except Exception as e:
             errs.append(str(e))
             print('Download failed:',type(e).__name__,str(e)[:190],flush=True)
-            time.sleep(2)
+            time.sleep(1)
     raise RuntimeError(f'Volume {vol} not retrieved: '+' | '.join(errs[-4:]))
 
 def clean_name(s):
