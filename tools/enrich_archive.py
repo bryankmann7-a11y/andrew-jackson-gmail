@@ -187,6 +187,87 @@ Postscript: I request an answer.
 # These are abbreviated reading aids, not verbatim quotations or scan-verified
 # diplomatic transcriptions. Stable IDs refer to *raw* Bassett OCR segments.
 EARLY_BY_ID = {
+"basset-1-9e869e7885e988a": """Sir,
+
+I received your letter today and am very sorry to hear that Mrs. Jackson has been unwell. I hope she is already recovering. I also regret that you must leave Knoxville so soon, though I understand that the business calling you away is urgent.
+
+Thank you for offering to carry letters for me. If I can prepare a letter to Judge McNairy in time, I will entrust it to you.
+
+I will recommend Mr. Eli Hammond to the Secretary of War. I also intend to mention him personally to the Secretary of State and the President, and I hope the recommendations will succeed.
+
+I have a private matter to discuss with one of the judges. If you can spare about fifteen minutes this evening, I would appreciate speaking with you.
+
+With respect and esteem, your obedient servant.
+
+[Condensed from Sevier's printed letter; unrelated editorial footnotes are omitted.]""",
+"basset-1-aa7f6f673d41b47": """Sir,
+
+Your insulting words and conduct toward me yesterday revealed, in my opinion, an arrogant and dishonorable character. I believe your anger came from evidence of fraud against you.
+
+The people have made you governor, and I respect that office, but I do not respect the way you treated me. I demand an explanation and the satisfaction your conduct requires.
+
+My friend will deliver this letter and give you the time and place where I expect you to meet me. Come with one friend and no one else. My friend and I will carry pistols. You cannot misunderstand what I mean.
+
+[Condensed from Jackson's printed OCR. This is an explicit armed challenge, not evidence that a duel actually occurred on this occasion.]""",
+"basset-1-32f7d2dac87b636": """Sir,
+
+If you find the saltworks in Illinois can be bought on good terms, you are authorized to sign an agreement in my name to secure payment.
+
+I cannot judge their value precisely, but I think $25,000 paid in merchandise might be a good purchase. If payment can be spread over three to five years, you may consider up to $35,000, although with only three years to pay I would prefer no more than $30,000. These are guidelines rather than strict instructions. Do not exceed $40,000.
+
+If buying is impossible, try to lease the saltworks for ten years on terms you consider suitable. You may sign for me in that arrangement as well.
+
+I want at least a one-third share, or one-half if you prefer that only the two of us be involved. I hope we can meet to discuss the details, and I can then give you fuller authority.
+
+With respect.
+
+[Condensed from the printed OCR. An intervening editorial footnote is omitted.]""",
+"basset-1-a05bb0177e766ab": """My love,
+
+I just received your letter of March 24. It pains me deeply to know how distressed you are. I would be happy to return to your arms, ease your worries, and spend our days quietly together away from public life.
+
+Mr. Coffee cannot continue the journey and must turn back. If I came home now, would it truly bring you peace, or could it lead us into poverty? That possibility frightens me.
+
+News from Washington suggests that I might be appointed governor of New Orleans. If that happens, I will return, and Coffee has promised to arrange his affairs and meet me again before we go on toward Philadelphia.
+
+Your letters and Mr. Hutchings's tell me how anxious you are about my safety. I have written by every post since I left and will continue to do so while I travel.
+
+I must stop now because I have been called into court. Before I leave this place, I will write more. I pray that God grants you health and peace of mind until I can hold you again.
+
+Your unchanging Andrew Jackson.
+
+[Condensed modern-English rendering based on the printed OCR, not checked against the manuscript.]""",
+"basset-1-14ea21c23102551": """Sir,
+
+If our government or country is insulted or attacked from any direction, I believe the people of Tennessee, especially the men under my command, would be ready to serve.
+
+I therefore offer their services to you. If you accept, I can issue orders at once.
+
+I enclose military orders that I recently issued. I have not yet received complete returns from the volunteer companies, but I believe three regiments of volunteers could be assembled under their own officers and be ready to march within twenty days after receiving orders.
+
+Please accept my high respect.
+
+[Condensed from the printed OCR. This is an offer of service, not proof that the regiments were mobilized.]""",
+"basset-1-719ea98a3509ec1": """Dear Sir,
+
+I wrote to you at length by the last mail about a matter on which I have heard nothing further. I remain strongly convinced of my belief, although I cannot yet prove it. Circumstances may still prevent the reported plan from coming to anything.
+
+I have little other news. There is a report that Colonel Burr has been arrested in Frankfort, Kentucky, on a charge of raising men to invade Mexico. I cannot confirm that report, but I consider its source credible.
+
+[Condensed from the printed OCR, which ends in a damaged passage. Jackson reports a rumor, not a confirmed arrest.]""",
+"basset-1-3ba8d6b99e16837": """Sir,
+
+Allow me to introduce the bearer, Mr. Seth Pease. He is a confidential agent of the government.
+
+He is traveling to examine whether the mail is being carried properly and on time. He is also investigating reports of a plan supposedly forming along the Ohio River that could threaten the peace of the United States.
+
+Any information you can give him would help your country and oblige me.
+
+Please treat this letter as confidential.
+
+Your obedient servant.
+
+[Condensed from Daniel Smith's printed letter; intervening editorial footnotes are omitted.]""",
 "basset-1-540838e26cba234": """Sir,
 
 I have read your letter from today. You explain that the harsh language near its end referred to yourself, not to me. I had understood it differently because people seldom describe their own faults in such severe terms. Your explanation shows that I misunderstood your meaning.
