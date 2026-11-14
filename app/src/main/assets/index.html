@@ -270,9 +270,9 @@ async function downloadCompiledHTML(){
  const prefix='const STARTER_LETTERS='+safeJson(data)+';\nconst STARTER_PEOPLE='+safeJson(people)+';\nconst BUNDLED_STATE='+safeJson({notes,starred:[...starred],read:[...read]})+';\n';
  let output='<!doctype html>\n'+start.slice(0,beg)+prefix+start.slice(end);
  for(const [file,source] of Object.entries(scripts)){
-   const tag='<script src="'+file+'"></script>';
+   const tag='<script src="'+file+'"></scr'+'ipt>';
    if(!output.includes(tag)){toast('Standalone HTML missing '+file);return}
-   output=output.replace(tag,'<script>'+source.replace(/<\/script/gi,'<\\/script')+'</script>');
+   output=output.replace(tag,'<script>'+source.replace(/<\/script/gi,'<\\/script')+'</scr'+'ipt>');
  }
  // The entire correspondence collection is included in STARTER_LETTERS for
  // this one-file export; do not fetch corpus.json from an absent file server.
