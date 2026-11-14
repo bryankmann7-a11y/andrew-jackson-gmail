@@ -132,7 +132,7 @@
   }
   function list() {
     const query = state.query.trim().toLowerCase();
-    const groups = model().groups.filter(t => t.messages.some(d => folderMatches(d,state.folder) && (!query || searchText(d).includes(query))));
+    const groups = model().groups.filter(t => t.messages.some(d => folderMatches(d,state.folder) && (!window.JacksonReaderUI || JacksonReaderUI.matches(d)) && (!query || searchText(d).includes(query))));
     groups.sort((a,b) => state.sort === "old" ? a.last.localeCompare(b.last) : b.last.localeCompare(a.last));
     return groups;
   }
@@ -152,6 +152,7 @@
     const latest = newest(t);
     const participants = t.messages.length > 1 ? "Jackson, " + t.other : (latest.from === JACKSON ? "Jackson → " + latest.to : latest.from);
     const badge = t.messages.length > 1 ? "<span class='gmail-count'>" + t.messages.length + "</span>" : "";
+    const quality = window.JacksonReaderUI ? JacksonReaderUI.annotation(latest) : (latest.modern?"Plain English":"Uncorrected OCR");
     return "<button class='gmail-list-item " + (model().byMessage.get(state.id)===t?"selected ":"") + (hasUnread(t)?"unread":"") +
       "' onclick=\"GmailThreadUI.select('" + escapeHTML(t.id) + "')\">" +
       avatar(t.other) +
@@ -159,7 +160,7 @@
       escapeHTML(shortDate(latest.date)) + "</span></span><span class='gmail-subject'>" +
       escapeHTML(t.messages.length > 1 ? title(t) : latest.subject) + "</span><span class='gmail-preview'>" +
       escapeHTML(excerpt(latest)) + "</span><span class='gmail-meta'><span>" + (t.messages.length > 1 ? "Conversation · possible reply links" : "Letter") +
-      "</span>" + (starredIn(t)?"<span style='color:#c28b16'>★ Starred</span>":"") + "</span></span></button>";
+      "</span><span> · " + escapeHTML(quality) + "</span>" + (starredIn(t)?"<span style='color:#c28b16'>★ Starred</span>":"") + "</span></span></button>";
   }
   function renderTab(d, tab) {
     const legacy = !d.modern && d._legacyAdaptation;
@@ -232,6 +233,7 @@
       "<button class='ghost mobile-back' onclick='backMobile()'>← Inbox</button>" +
       "<button class='ghost' onclick=\"GmailThreadUI.expandAll()\">Expand all</button>" +
       "<button class='ghost' onclick=\"GmailThreadUI.collapseAll()\">Collapse</button></div>" +
+      (window.JacksonReaderUI?JacksonReaderUI.controls():"") +
       "<div class='right-tools'><button class='ghost' " + (previous?"":"disabled") + " onclick=\"GmailThreadUI.select('" +
       (previous?escapeHTML(previous.id):"") + "')\">‹</button><button class='ghost' " + (next?"":"disabled") +
       " onclick=\"GmailThreadUI.select('" + (next?escapeHTML(next.id):"") + "')\">›</button></div></div>" +
