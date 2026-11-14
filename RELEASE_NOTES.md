@@ -1,4 +1,4 @@
-# Jackson Letters v3.3.0 — final personal Android build
+# Jackson Letters Standalone — separate Android installation
 
 This Android app presents Andrew Jackson's surviving historical correspondence in a Gmail-style offline reader. It is **not** an actual Gmail client.
 
@@ -24,9 +24,9 @@ This Android app presents Andrew Jackson's surviving historical correspondence i
 The records are *OCR candidates*, not 2,116 verified manuscripts. The current audit identifies 286 records needing manual review. Dates, names, page boundaries and original print OCR may still be wrong. Of the 2,116, only 33 have condensed modern-English adaptations. Verify against the linked book scans before citing any original. The app does not invent replies or hide its editorial limits.
 
 ## Install
-Download **JacksonLetters-v3.3.0.apk** from the [release page](https://github.com/bryankmann7-a11y/andrew-jackson-gmail/releases/tag/v3.3.0) on your Android phone and open it.
+Download **JacksonLetters-Standalone.apk** from the [release page](https://github.com/bryankmann7-a11y/andrew-jackson-gmail/releases/tag/v3.3.0-standalone) on your Android phone and open it.
 
-**Do not uninstall your current app first.** It keeps notes, stars and read markers locally. This build retains the same application ID and reuses the previous signing key, with an increased version code to update the existing copy. If Android reports a signing mismatch, stop and export a JSON backup from the old app before uninstalling anything.
+**This APK installs as a new app, not an update.** The Android package ID is `org.jacksonletters.archive.standalone`; earlier versions use a different ID and remain untouched. Local notes and stars are not automatically shared. If wanted, export a JSON backup from the old installation and import it into this separate installation. There is no need to uninstall either older app.
 
 This is a directly distributed, debug-signed APK, not a Play Store release.
 
