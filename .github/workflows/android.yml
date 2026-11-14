@@ -34,6 +34,8 @@ jobs:
           test -s app/src/main/assets/archive/corpus.json
       - name: Verify correspondence integrity
         run: python3 tools/test_archive.py
+      - name: Check cleaned OCR reading copies
+        run: python3 tools/test_ocr_clean.py
       - name: Verify Gmail conversation threading
         run: |
           node --check app/src/main/assets/threading.js
