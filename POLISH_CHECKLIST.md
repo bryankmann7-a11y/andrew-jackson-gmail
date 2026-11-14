@@ -33,6 +33,8 @@ Current baseline: Android WebView APK with the six Bassett OCR volumes; 2,116 au
 - [x] **P2-00 Automated OCR display cleanup.** Remove printed page headers/page numbers from readable copies; rejoin words split across pages; explicitly flag embedded unreadable symbols, e.g. `John$-11called` → `John [unclear OCR] called`; preserve verbatim `original` field. Filter a known misclassified table-of-contents item and test fixes against all six volumes. Further source-by-source corrections remain open.
 
 
+- [x] **P2-00c Additional illegible OCR markers (November 14, 2026).** Clearly fused words containing digits or symbols now show `[unclear OCR]` in display-only reading copies instead of unreadable junk; legitimate amounts and years are preserved. The OCR audit checks the original text too, retaining the exact reason each passage was flagged. All original OCR remains untouched. The full six-volume CI audit currently flags 286 entries for review; 43 fragment markers are displayed. Regression and APK compilation tests pass.
+
 - [ ] **P2-01 Historical editorial pass.** Check documents against actual volume pages; fix dates/people/page references; flag missing, truncated, and combined entries; review at least a sample from each decade before trusting bulk extraction.
 - [ ] **P2-02 Plain-English editions (ongoing editorial work).** Added nine further short OCR-grounded adaptations (1806–1813), bringing the total to 33. Historical source OCR is preserved and none is presented as scan-verified. The majority of correspondence still needs human editorial work; missing replies must not be invented.
 - [ ] **P2-03 Real profiles, careful portraits.** Separate verified biography from speculative illustration; don't label generated pictures as authentic portraits. Add sourced descriptions and relationship context.
@@ -42,8 +44,8 @@ Current baseline: Android WebView APK with the six Bassett OCR volumes; 2,116 au
 
 ## Latest verified build
 
-- GitHub Actions run 103 (commit `5b844f759c7032f7d66375023703a6a52f32ac95`): all archive integrity, reader/filter, standalone HTML export, Gmail threading, SMS, navigation and APK build tests passed.
-- 2,116 OCR candidates, 33 modern-English reading aids, and 253 OCR review candidates. UI automation on a physical Android phone remains outstanding.
+- GitHub Actions [run 43626779073](https://github.com/bryankmann7-a11y/andrew-jackson-gmail/actions/runs/43626779073) (commit `47b00aa21c9f6e9405c5955e6fc5d6be8fba80f4`): Python and JavaScript preflight, six-volume download, OCR cleaning, review audit, archive integrity, reader/filter, standalone export, Gmail threading, SMS, navigation and APK build all passed.
+- 2,116 OCR candidates in 1,902 provisional Gmail-style conversations, 33 modern-English reading aids, 286 OCR review candidates, and 43 explicitly marked unreadable fragments. This is a code-and-CI pass, not a manual verification of scans or physical Android smoke test.
 
 ## Working order
 
