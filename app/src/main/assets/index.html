@@ -245,7 +245,7 @@ function downloadTemplate(){let v=[{date:'1798-01-01',from:'Andrew Jackson',to:'
 async function downloadCompiledHTML(){
  // Export a truly standalone document. The Android shell serves its UI
  // modules separately; embed each script before offering a portable HTML.
- const safeJson=x=>JSON.stringify(x).replace(/</g,'\u003c').replace(/\u2028/g,'\u2028').replace(/\u2029/g,'\u2029');
+ const safeJson=x=>JSON.stringify(x).replace(/</g,'\\u003c').replace(/\u2028/g,'\\u2028').replace(/\u2029/g,'\\u2029');
  let scripts={};
  try{
    for(const file of ['threading.js','sms_view.js','navigation.js','reader_ui.js']){
