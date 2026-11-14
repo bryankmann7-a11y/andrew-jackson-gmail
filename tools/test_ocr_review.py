@@ -33,6 +33,25 @@ for uid,(date,person,words) in samples.items():
  assert d["status"]=="ocr" and d["sourceChecked"] is False
  assert d["ocrFlags"]==audit_letter(d)
 
+additional_letters = {
+ "basset-1-2083f23d6268b7f": ("1806-12-05", ["Mrs. Jackson", "defend"]),
+ "basset-1-8f8443529d1e5b9": ("1806-12-29", ["Burr", "New Orleans"]),
+ "basset-1-4a74504242600a4": ("1807-01-05", ["Gallatin", "mustered"]),
+ "basset-1-14fb0396d9f7105": ("1807-01-09", ["Union", "Doctors Claiborne"]),
+ "basset-1-0bef28e4e0ea918": ("1813-02-16", ["Fort Massac", "government property"]),
+ "basset-1-ecb2fd48c873b49": ("1813-03-30", ["sick", "quartermaster"]),
+ "basset-1-6d3b1f49751084d": ("1813-04-10", ["March 22", "New Orleans"]),
+ "basset-1-56e95462436fc35": ("1813-10-19", ["Mr. Quarles", "relief"]),
+ "basset-1-962a97d2936f7b8": ("1813-09-25", ["Huntsville", "Mobile"]),
+}
+for uid,(date,phrases) in additional_letters.items():
+ d=by_id[uid]
+ assert d["date"]==date
+ assert d["modern"] and all(p.lower() in d["modern"].lower() for p in phrases)
+ assert d["status"]=="ocr" and not d["sourceChecked"], "Do not label OCR as scan checked"
+ assert "human-authored" in d["modernType"]
+ assert len(d["original"])>200
+
 assert "referred to yourself, not to me" in by_id["basset-1-540838e26cba234"]["modern"]
 assert normalize_person("John Oveertonn")=="John Overton"
 assert normalize_person("Jouhn Coffee")=="John Coffee"
