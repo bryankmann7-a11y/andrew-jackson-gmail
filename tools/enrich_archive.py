@@ -122,6 +122,35 @@ The territory's population appears to entitle it to two congressional representa
 # The same-day Jackson/Sevier exchange has two different authors:
 # index by sender as well as recipient to avoid putting one man's words in the other's mouth.
 DIALOGUE={
+ '1797-05-10|Andrew Jackson|John Sevier': """Sir,
+
+I have considered your letter of May 8. I agree with much of what you say about general principles, and I recognize that facts can be misstated.
+
+When I spoke at the militia election, I was neither your political nor your private enemy, and I do not wish to become one. But I must defend my feelings and reputation when they are maliciously injured, just as you would.
+
+I am pleased to believe that you did not intend maliciously to injure my reputation and that your earlier letters were written in anger. I hope you were not driven by party spirit, although seeing Joel Lewis use your private letter in public gave me reason to think otherwise.
+
+I recognize that a governor is answerable for official acts through constitutional procedures. Malicious personal slander, however, is a matter of honor. I hope neither of us has committed it. In the future, please distinguish criticism of your public conduct from a personal attack.
+
+As for Lewis, if he used your letter without permission, that is a matter between him and you.
+
+I would gladly talk with you in person. Please suggest a time when I can visit your room.
+
+[Condensed from the printed OCR; this is Jackson's position, not a literal quotation.]""",
+ '1797-05-11|John Sevier|Andrew Jackson': """Sir,
+
+Your polite letter of yesterday deserves an immediate and candid reply. I assure you that I have never regarded you as either a personal or political enemy. I am happy to be friendly with any man of merit.
+
+We both seem to want an honorable reconciliation. If we speak coolly and sincerely, that reconciliation can last.
+
+You propose a personal meeting and ask me to name the time and the people who should attend. I agree. I will stay in town until the court adjourns and can meet wherever you choose. I have no strong preference about those present, but Captain Sparks and Judge Claiborne are with me, and I may ask General Robertson to come as well.
+
+An honorable man should acknowledge a mistake once convinced of it. If either of us has acted rashly, I hope we will make the necessary concessions and end with a real friendship, not merely a polite appearance of one.
+
+Your humble servant.
+
+[Condensed from the printed OCR of Sevier's reply.]""",
+
  '1797-05-08|Andrew Jackson|John Sevier': """Sir,
 
 Your friendly letters while I was in Philadelphia made me think you understood why I criticized your official conduct at a militia election. I believed I had the right, as a citizen, to express an opinion about a governor's official acts.
