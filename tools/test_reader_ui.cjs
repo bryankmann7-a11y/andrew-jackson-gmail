@@ -11,13 +11,13 @@ const elements={
  filterQuality:{value:"all"},
  filterReset:{style:{display:"none"}}
 };
-let rerenders=0,property="",sizeValue="";
+let rerenders=0;const properties={};
 const doc={
  readyState:"complete",
  createElement:()=>({textContent:""}),
  head:{appendChild(){}},
  body:{classList:{add(x){classes.add(x)},remove(x){classes.delete(x)}}},
- documentElement:{style:{setProperty(k,v){property=k;sizeValue=v}}},
+ documentElement:{style:{setProperty(k,v){properties[k]=v}}},
  getElementById:k=>elements[k]||null
 };
 const context={
@@ -31,7 +31,8 @@ vm.createContext(context);
 vm.runInContext(file,context);
 const ui=context.window.JacksonReaderUI;
 assert.ok(ui&&ui.filterBar().includes("OCR reading copy"));
-assert.equal(property,"--reading-size");
+assert.equal(properties["--reading-size"],"16px");
+assert.equal(properties["--reading-leading"],"1.85");
 assert.equal(ui.getPrefs().size,16);
 assert.equal(ui.getPrefs().mode,"paper");
 const before={date:"1803-10-02",status:"ocr",modern:"",original:"Original only",needsReview:true};
