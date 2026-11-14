@@ -173,6 +173,11 @@ def parse(s,vol):
                     break
         raw='\n'.join(lines[after+1:nextat]).strip()
         if len(raw)<135:continue
+        # A heavily corrupted table-of-contents page can resemble a letter
+        # heading. Do not put an obviously misclassified book index in inbox.
+        if len(raw)>20000 and len(re.findall(r'(?im)^.{0,35}Table of Contents\b',raw))>=3:
+            print('Discarded OCR table of contents misclassified as a letter:',vol,date,flush=True)
+            continue
         original_len=len(raw)
         if len(raw)>36000:raw=raw[:36000]+'\n\n[OCR extraction truncated after 36,000 characters]'
         if not re.search(r'[A-Za-z]{4}',raw):continue
