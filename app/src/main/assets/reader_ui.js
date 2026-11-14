@@ -6,12 +6,14 @@
   const modes = ["paper", "sepia", "night"];
   const limits = {min:13,max:23};
   const filter = {period:"all",quality:"all"};
+  const leadingOptions=[1.55,1.85,2.1];
   let saved={};
   try { saved=JSON.parse(localStorage.getItem(KEY)||"{}")||{}; } catch (_) {}
   let size=Number(saved.size)||16;
   if(!Number.isFinite(size))size=16;
   size=Math.max(limits.min,Math.min(limits.max,size));
   let mode=modes.includes(saved.mode)?saved.mode:"paper";
+  let leading=leadingOptions.includes(saved.leading)?saved.leading:1.85;
   const css=document.createElement("style");
   css.textContent=[
     ".archive-filters{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding:4px 14px 12px;background:white;border-bottom:1px solid var(--line)}",
@@ -19,7 +21,7 @@
     ".archive-filters button{border:0;background:transparent;color:#2859c5;padding:8px;font-size:12px;white-space:nowrap}",
     ".reader-pref-controls{display:inline-flex;flex-wrap:wrap;align-items:center;gap:5px}",
     ".reader-pref-controls button{font-size:12px;padding:9px 10px}",
-    ".reader .gmail-document:not(.info),.reader .letter-body{font-size:var(--reading-size,16px)!important;line-height:1.85!important;overflow-wrap:anywhere}",
+    ".reader .gmail-document:not(.info),.reader .letter-body{font-size:var(--reading-size,16px)!important;line-height:var(--reading-leading,1.85)!important;overflow-wrap:anywhere}",
     ".reader .gmail-document.info{font-size:14px}",
     "body.reader-theme-sepia .reader{background:#f4ecd9;color:#3c3325}",
     "body.reader-theme-sepia .gmail-message,body.reader-theme-sepia .envelope{background:#fff8e7;border-color:#e1d2b6;color:#3c3325}",
@@ -39,15 +41,20 @@
     "body.reader-theme-night .gmail-tabs{border-color:#455365}",
     "body.reader-theme-night .gmail-message-actions .ghost,body.reader-theme-night .gmail-toolbar .ghost{background:#2c3950;color:#e5efff;border-color:#52647c}",
     "body.reader-theme-night .gmail-wrap a{color:#adc8ff}",
+    "body.reader-theme-night .sms-footer,body.reader-theme-night .sms-head{background:#263242;color:#e2eaf7;border-color:#43536a}",
+    "body.reader-theme-night .sms-date-divider{background:#37475e;color:#e3ebf7;border-color:#52647e}",
+    "body.reader-theme-night .sms-line:not(.sent) .bubble{background:#344256;color:#eef3fa}",
+    "body.reader-theme-sepia .sms-footer,body.reader-theme-sepia .sms-head{background:#fff8e7;color:#3b3023;border-color:#e1d2b6}",
     "@media(max-width:730px){.archive-filters{padding:3px 10px 9px}.archive-filters select{font-size:11px;max-width:46%}.reader-pref-controls button{font-size:11px;padding:8px}}"
   ].join("\n");
   document.head.appendChild(css);
 
   function persist(){
-    try { localStorage.setItem(KEY,JSON.stringify({size,mode})); } catch (_) {}
+    try { localStorage.setItem(KEY,JSON.stringify({size,mode,leading})); } catch (_) {}
   }
   function apply(){
     document.documentElement.style.setProperty("--reading-size",size+"px");
+    document.documentElement.style.setProperty("--reading-leading",String(leading));
     for(const m of modes)document.body.classList.remove("reader-theme-"+m);
     document.body.classList.add("reader-theme-"+mode);
   }
@@ -97,6 +104,7 @@
     return '<span class="reader-pref-controls" role="group" aria-label="Reading display options">'+
       '<button class="ghost" onclick="JacksonReaderUI.adjust(-1)" aria-label="Smaller letter text">A−</button>'+
       '<button class="ghost" onclick="JacksonReaderUI.adjust(1)" aria-label="Larger letter text">A+</button>'+
+      '<button class="ghost" onclick="JacksonReaderUI.spacing()" aria-label="Change letter line spacing">Spacing</button>'+ 
       '<button class="ghost" onclick="JacksonReaderUI.theme()" aria-label="Change reading background">Theme</button></span>';
   }
   function adjust(delta){
@@ -107,6 +115,10 @@
     mode=modes[(modes.indexOf(mode)+1)%modes.length];
     persist();apply();
   }
+  function spacing(){
+    leading=leadingOptions[(leadingOptions.indexOf(leading)+1)%leadingOptions.length];
+    persist();apply();
+  }
   function annotation(d){
     if(d.modern||d._legacyAdaptation)return "Plain-English adaptation — not verbatim";
     if(d.status==="ocr")return d.needsReview?"OCR needs checking":"Uncorrected OCR";
@@ -115,5 +127,5 @@
   // Apply after document body exists (module is loaded just before inline logic).
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",apply);
   else apply();
-  window.JacksonReaderUI={filter,matches,filterBar,sync,changed,clear,controls,adjust,theme,annotation,getPrefs:()=>({size,mode}),setFilter:(period,quality)=>{filter.period=period;filter.quality=quality;}};
+  window.JacksonReaderUI={filter,matches,filterBar,sync,changed,clear,controls,adjust,theme,spacing,annotation,getPrefs:()=>({size,mode,leading}),setFilter:(period,quality)=>{filter.period=period;filter.quality=quality;}};
 })();
