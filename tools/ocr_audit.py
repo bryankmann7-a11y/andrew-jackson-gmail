@@ -17,7 +17,7 @@ REPORT_DIR = ROOT / "reports"
 
 LETTER_DIGIT = re.compile(r"\b[A-Za-z]{2,}[0-9]+[A-Za-z]{2,}\b")
 MIDWORD_SYMBOL = re.compile(r"\b[A-Za-z]{2,}[$@#^*|~+][A-Za-z0-9$@#^*|~+.\-]{0,12}\b")
-INTERRUPTED_WORD = re.compile(r"(?i)[a-z]{3,}-[ \t]*\n(?:[ \t]*\n)?[0-9]{1,2}[ \t]+[A-Za-z]")
+INTERRUPTED_WORD = re.compile(r"(?i)[a-z]{3,}-[ \t]*(?:\n[ \t]*){2,5}[1-9][0-9]?[ \t]+[A-Za-z]")
 EMBEDDED_HEADING = re.compile(r"(?mi)^[ \t]*(?:To [A-Z][A-Za-z .,']{6,60}|[A-Z][A-Za-z .,'-]{6,60} TO JACKSON)[.?! \t]*$")
 JUNK_LINE = re.compile(r"(?m)^[ \t]*(?:[_.:*=~\- ]{4,}|[A-Za-z0-9.,:$%/ +]{9,40}(?:\s\.\.\s){2,})[ \t]*$")
 
