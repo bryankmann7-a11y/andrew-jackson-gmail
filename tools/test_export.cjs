@@ -38,7 +38,10 @@ vm.runInContext(html.slice(start,end)+"\nwindow.saveStandalone=downloadCompiledH
   assert.ok(!artifact.blob.includes('<script src="'+file+'"></script>'),file+" still external");
   assert.ok(artifact.blob.includes(fs.readFileSync(path.join(assets,file),"utf8").slice(0,45)),file+" source not embedded");
  }
- assert.equal(artifact.blob.split("read.add(state.id);save(false);render();loadLargeArchive();loadBundledCorrespondence();").length-1,1,"Standalone export should retain this loader only as an inert string inside the exporter function, not call it");
+ assert.equal(artifact.blob.split("save(false);render();loadLargeArchive();loadBundledCorrespondence();").length-1,1,
+   "The original loader must remain only as a quoted string inside the exporter");
+ assert.ok(/\}save\(false\);render\(\);\s*<\/script><\/body><\/html>/.test(artifact.blob),
+   "Standalone archive must launch without trying to fetch missing bundled assets");
  assert.ok(artifact.blob.includes("\\u003c/script"),"Embedded JSON wasn't HTML-escaped");
  assert.ok(artifact.blob.includes("My note") && artifact.blob.includes("A letter with angle brackets"));
  // Importing an exported letter must not silently strip its OCR review status,
@@ -55,5 +58,22 @@ vm.runInContext(html.slice(start,end)+"\nwindow.saveStandalone=downloadCompiledH
  assert.equal(imported.needsReview,true);
  assert.equal(imported.page,110);
  assert.equal(imported.sourceChecked,false);
- console.log("STANDALONE_EXPORT_TESTS_OK: embedded archive, four scripts, notes, safe JSON, OCR import metadata");
+ // Java encodes each AndroidBridge chunk separately; never split a surrogate pair.
+ const chunkStart=html.indexOf("function safeExportChunks(");
+ const chunkEnd=html.indexOf("\nfunction downloadTemplate()",chunkStart);
+ assert.ok(chunkStart>0&&chunkEnd>chunkStart);
+ const sent=[];
+ const bridge={beginSave(){},saveChunk(text){sent.push(text)},finishSave(){}};
+ const unicode="A".repeat(15999)+"😀"+"B".repeat(16000)+"𐐷";
+ vm.runInNewContext(html.slice(chunkStart,chunkEnd)+"\ndownload('archive.json',payload);",
+   {window:{AndroidBridge:bridge},AndroidBridge:bridge,toast(){},payload:unicode});
+ assert.equal(sent.join(""),unicode,"Android export must preserve complete Unicode characters");
+ assert.ok(sent.length>2);
+ for(const chunk of sent){
+   assert.ok(chunk.length<=16000);
+   const first=chunk.charCodeAt(0),last=chunk.charCodeAt(chunk.length-1);
+   assert.ok(first<0xDC00||first>0xDFFF,"Export chunk begins with low surrogate");
+   assert.ok(last<0xD800||last>0xDBFF,"Export chunk ends with high surrogate");
+ }
+ console.log("STANDALONE_EXPORT_TESTS_OK: standalone offline launch, Unicode-safe backup, source metadata");
 })().catch(err=>{console.error(err);process.exitCode=1});
