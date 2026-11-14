@@ -43,4 +43,16 @@ const sample=records.find(d=>d.status==="ocr"&&d.from==="Andrew Jackson"&&d.to==
 assert.ok(sample);
 ctx.data.push({id:"j-test-duplicate",date:sample.date,from:sample.from,to:sample.to,status:"adapted",modern:"Earlier unchecked adaptation"});
 assert.equal(ui.counts("all"),total,"Legacy adaptation was duplicated beside its OCR source");
+assert.equal(sample._legacyId,"j-test-duplicate","Legacy star/note alias was not retained");
+ctx.STARTER_LETTERS=[{id:"in-synthetic-starter"}];
+ctx.data.push({id:"in-synthetic-starter",date:sample.date,from:sample.from,to:sample.to,status:"adapted",modern:"Second starter copy"});
+assert.equal(ui.counts("all"),total,"Non-j starter copy duplicated the OCR letter");
+// If two actual originals share the same date and parties, don't merge a
+// historic starter into an arbitrary one.
+const duplicateOriginal=Object.assign({},sample,{id:"basset-test-same-day"});
+ctx.data.push(duplicateOriginal);
+ctx.data.push({id:"j-ambiguous",date:sample.date,from:sample.from,to:sample.to,status:"adapted",modern:"Uncertain alternate text"});
+const after=ui.threadForMessage("j-ambiguous");
+assert.ok(after && after.messages.some(d=>d.id==="j-ambiguous"),"Ambiguous same-day document was silently hidden");
+
 console.log("THREAD_TESTS_OK",records.length,"OCR candidates in",total,"email conversations;",thread.messages.length,"Sevier messages grouped");
