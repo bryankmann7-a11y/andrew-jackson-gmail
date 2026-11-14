@@ -63,6 +63,23 @@ assert.equal(state.profile,false);
 assert.equal(state.id,"letter-1");
 assert.equal(els.get("#reader").classList.contains("show"),true);
 assert.equal(els.get("#reader").scrollTop,570);
+// Opening a full email from SMS must return to the SMS message with its position.
+state.view="sms";state.id="sms-selected";state.folder="all";
+els.get("#reader").classList.add("show");els.get("#reader").scrollTop=212;
+nav.enter();
+state.view="mail";state.id="opened-full-mail";
+els.get("#reader").scrollTop=0;
+assert.equal(nav.back(),true);
+assert.equal(state.view,"sms");
+assert.equal(state.id,"sms-selected");
+assert.equal(els.get("#reader").scrollTop,212);
+// Back while editing notes should dismiss the keyboard first, not close the letter.
+let blurred=0;
+context.document.activeElement={tagName:"TEXTAREA",blur(){blurred++;}};
+assert.equal(nav.back(),true);
+assert.equal(blurred,1);
+assert.equal(els.get("#reader").classList.contains("show"),true);
+context.document.activeElement={tagName:"DIV",blur(){}};
 // Drawer has priority over the reader.
 els.get("#sidebar").classList.add("open");
 assert.equal(nav.back(),true);
