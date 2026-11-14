@@ -28,6 +28,10 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
+      - name: Download and separate Bassett volumes I–VI
+        run: |
+          python3 tools/build_archive.py
+          test -s app/src/main/assets/archive/corpus.json
       - name: Build APK
         run: gradle --no-daemon assembleDebug
       - name: Upload APK
