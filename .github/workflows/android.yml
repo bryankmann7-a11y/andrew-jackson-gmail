@@ -34,6 +34,7 @@ jobs:
           node --check app/src/main/assets/threading.js
           node --check app/src/main/assets/sms_view.js
           node --check app/src/main/assets/navigation.js
+          node tools/test_inline.cjs
       - name: Download and separate Bassett volumes I–VI
         run: |
           python3 tools/build_archive.py
