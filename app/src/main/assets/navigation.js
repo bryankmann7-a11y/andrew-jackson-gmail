@@ -66,6 +66,11 @@
       else sidebar.classList.remove("open");
       return true;
     }
+    // Give the keyboard Back action priority while editing notes or searching.
+    if(document.activeElement&&/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)){
+      document.activeElement.blur();
+      return true;
+    }
     const reader=el("#reader");
     if(reader&&reader.classList.contains("show")){
       if(history.length)restore(history.pop());
@@ -84,10 +89,6 @@
     if(state.folder!=="all"){
       state.folder="all";state.profile=false;LIST_LIMIT=120;
       render();
-      return true;
-    }
-    if(document.activeElement&&/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)){
-      document.activeElement.blur();
       return true;
     }
     return false;
