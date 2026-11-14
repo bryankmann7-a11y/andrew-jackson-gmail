@@ -361,7 +361,7 @@ ALIASES={
 TITLES=re.compile(r'^(?:brigadier[\s-]*general|major[\s-]*general|colonel|col|gen|general|rev|reverend|dr|mr|mrs|miss|hon)\.?\s+',re.I)
 # These noisy headings all explicitly say '... B. Lewis' and differ only in
 # OCR spellings of William/Lewis and rank; do not apply fuzzy name matching.
-WILLIAM_LEWIS_HEADING=re.compile(r'(?i)^(?:(?:major|mayor)\s+)?w[ilutxr.]{2,12}a{1,2}m{1,2}\s+b[.,]?\s+lew[iyt]+s
+WILLIAM_LEWIS_HEADING=re.compile(r'(?i)^(?:(?:major|mayor)\s+)?w[ilutxr.]{2,12}a{1,2}m{1,2}\s+b[.,]?\s+lew[iyt]+s$')
 def key_name(s):
     s=re.sub(r'\s+',' ',str(s).strip())
     s=re.sub(r'[.,;:!?]+$','',s)
