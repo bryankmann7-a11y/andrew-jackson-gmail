@@ -37,6 +37,10 @@ for d,to in [("1789-02-13","Daniel Smith"),("1791-01-20","Daniel Smith"),
     matches=[x for x in letters if x["date"]==d and x["to"]==to and x["from"]=="Andrew Jackson"]
     assert matches,(d,to)
     assert matches[0]["modern"],f"Missing early letter modern English: {d} to {to}"
+# The incoming May 11 letter must be separated from Jackson's preceding note.
+may11=[x for x in letters if x["date"]=="1797-05-11" and x["from"]=="John Sevier" and x["to"]=="Andrew Jackson"]
+assert may11, "Sevier's May 11, 1797 letter should be separated from Jackson's May 10 message"
+assert may11[0]["modern"], "Missing Sevier's modern-English rendition"
 assert sum(x["from"]=="Andrew Jackson" for x in letters)>500
 assert sum(x["to"]=="Andrew Jackson" for x in letters)>250
 names=collections.Counter(x["to"] for x in letters)
