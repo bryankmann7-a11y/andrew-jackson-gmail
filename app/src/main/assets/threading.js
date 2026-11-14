@@ -254,6 +254,7 @@
   function select(id) {
     const t = model().byThread.get(id) || model().byMessage.get(id);
     if (!t) return;
+    if(window.JacksonNav)JacksonNav.enter();
     if (state.folder === "unread") state.folder = "all";
     state.profile = false;
     state.id = newest(t).id;
