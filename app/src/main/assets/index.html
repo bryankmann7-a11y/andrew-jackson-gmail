@@ -279,5 +279,37 @@ window.JacksonNative={
 };
 
 $('#records').addEventListener('scroll',()=>{let el=$('#records');if(el.scrollTop+el.clientHeight>=el.scrollHeight-650){let amount=visible().length;if(LIST_LIMIT<amount){LIST_LIMIT=Math.min(amount,LIST_LIMIT+120);render();}}});
-$('#search').addEventListener('input',e=>{state.query=e.target.value;LIST_LIMIT=120;render()});$('#sort').addEventListener('change',e=>{state.sort=e.target.value;LIST_LIMIT=120;render()});$$('#viewMode button').forEach(b=>b.addEventListener('click',()=>{state.view=b.dataset.view;renderMode();$('#reader').classList.add('show')}));window.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();if(e.target?.tagName==='INPUT'||e.target?.tagName==='TEXTAREA')return;if(e.key==='j'||e.key==='k'){let arr=visible(),idx=arr.findIndex(x=>x.id===state.id),next=arr[idx+(e.key==='j'?1:-1)];if(next)selectLetter(next.id)}});read.add(state.id);save(false);render();loadLargeArchive();
+$('#search').addEventListener('input',e=>{state.query=e.target.value;LIST_LIMIT=120;render()});$('#sort').addEventListener('change',e=>{state.sort=e.target.value;LIST_LIMIT=120;render()});$$('#viewMode button').forEach(b=>b.addEventListener('click',()=>{state.view=b.dataset.view;renderMode();$('#reader').classList.add('show')}));window.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();if(e.target?.tagName==='INPUT'||e.target?.tagName==='TEXTAREA')return;if(e.key==='j'||e.key==='k'){let arr=visible(),idx=arr.findIndex(x=>x.id===state.id),next=arr[idx+(e.key==='j'?1:-1)];if(next)selectLetter(next.id)}});
+async function loadBundledCorrespondence(){
+ const notice=document.querySelector('#archiveNotice');
+ try{
+   const response=await fetch('/archive/corpus.json',{cache:'force-cache'});
+   if(!response.ok)throw Error('Archive asset not found: HTTP '+response.status);
+   const archive=await response.json();
+   if(!Array.isArray(archive.letters)||archive.letters.length<100)throw Error('Archive contains no usable correspondence');
+   const seen=new Set(data.map(x=>x.id));
+   let added=0;
+   for(const entry of archive.letters){
+     if(!entry || !entry.id || seen.has(entry.id))continue;
+     seen.add(entry.id);data.push(entry);added++;
+     for(const name of [entry.from,entry.to]){
+       if(name&&!people[name])people[name]={role:'Historic correspondent · source OCR',bio:'A profile is generated for navigation, not a verified portrait or biography.',initials:name.trim().split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase(),palette:['#5a738c','#93a9bc']};
+     }
+   }
+   if(notice){
+     notice.innerHTML='<b>'+archive.letters.length.toLocaleString()+' extracted letter candidates bundled offline</b> from six published volumes. The historical text is <b>uncorrected OCR</b>, not a modern-English rewrite. Names, boundaries, pages and replies may need verification. The older starter adaptations are marked separately.';
+     notice.style.display='';
+   }
+   render();
+   if(notice)notice.style.display='';
+ }catch(e){
+   if(notice){
+     notice.textContent='Offline correspondence data not found or damaged. Starter entries are still available. '+String(e.message||e);
+     notice.style.display='';
+   }
+   console.warn('Bundled archive could not load:',e);
+ }
+}
+
+read.add(state.id);save(false);render();loadLargeArchive();loadBundledCorrespondence();
 </script></body></html>
