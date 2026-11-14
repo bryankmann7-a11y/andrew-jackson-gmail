@@ -243,7 +243,8 @@ function parseBassettOCR(text,volume){
 }
 function parseCSV(src){let rows=[],row=[],cur='',quoted=false;for(let i=0;i<src.length;i++){let c=src[i];if(c==='"'){if(quoted&&src[i+1]==='"'){cur+='"';i++}else quoted=!quoted}else if(c===','&&!quoted){row.push(cur);cur=''}else if((c==='\n'||c==='\r')&&!quoted){if(c==='\r'&&src[i+1]==='\n')i++;row.push(cur);if(row.some(x=>x.trim()))rows.push(row);row=[];cur=''}else cur+=c}row.push(cur);if(row.some(x=>x.trim()))rows.push(row);let keys=rows.shift()?.map(x=>x.trim().replace(/^\ufeff/,''))||[];return rows.map(row=>Object.fromEntries(keys.map((k,i)=>[k,row[i]||''])))}
 function addOne(){let from=$('#inFrom').value.trim(),to=$('#inTo').value.trim(),date=$('#inDate').value,text=$('#inText').value.trim(),status=$('#inStatus').value;if(!from||!to||!date||!text){toast('Fill in sender, recipient, date, and text');return}addImported([{from,to,date,subject:$('#inSubject').value.trim()||'Untitled letter',status,original:status==='original'?text:'',modern:status==='adapted'?text:'',source:$('#inSource').value.trim(),summary:text.slice(0,150)}])}
-function download(name,s,type='application/json'){if(window.AndroidBridge){try{AndroidBridge.beginSave(name,type);for(let i=0;i<s.length;i+=16000)AndroidBridge.saveChunk(s.slice(i,i+16000));AndroidBridge.finishSave();toast('Choose a file location');return}catch(e){toast('Export failed: '+e.message);return}}let url=URL.createObjectURL(new Blob([s],{type}));let a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+function safeExportChunks(s,chunkSize=16000){let chunks=[];for(let i=0;i<s.length;){let end=Math.min(s.length,i+chunkSize);if(end<s.length&&end>i){let last=s.charCodeAt(end-1),next=s.charCodeAt(end);if(last>=0xD800&&last<=0xDBFF&&next>=0xDC00&&next<=0xDFFF)end--;}chunks.push(s.slice(i,end));i=end;}return chunks}
+function download(name,s,type='application/json'){if(window.AndroidBridge){try{AndroidBridge.beginSave(name,type);for(const part of safeExportChunks(s))AndroidBridge.saveChunk(part);AndroidBridge.finishSave();toast('Choose a file location');return}catch(e){toast('Export failed: '+e.message);return}}let url=URL.createObjectURL(new Blob([s],{type}));let a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 function downloadTemplate(){let v=[{date:'1798-01-01',from:'Andrew Jackson',to:'A Correspondent',subject:'Example letter',modern:'Your clear modern-English version goes here',original:'Put the verified original transcription here',summary:'One sentence overview',context:'Historical details',replyContext:'What prior letter this responds to, if known',source:'https://...',status:'adapted',sourceChecked:false,sourceCitation:'Edition and page',kind:'letter'}];download('jackson_import_template.json',JSON.stringify(v,null,2))}
 async function downloadCompiledHTML(){
  // Export a truly standalone document. The Android shell serves its UI
@@ -279,9 +280,12 @@ async function downloadCompiledHTML(){
  }
  // The entire correspondence collection is included in STARTER_LETTERS for
  // this one-file export; do not fetch corpus.json from an absent file server.
- const loader='read.add(state.id);save(false);render();loadLargeArchive();loadBundledCorrespondence();';
- if(!output.includes(loader)){toast('Unable to package offline archive; use Export JSON');return}
- output=output.replace(loader,'read.add(state.id);save(false);render();');
+ const loader='save(false);render();loadLargeArchive();loadBundledCorrespondence();';
+ // Replace the actual final startup statement, not this function's own
+ // quoted loader string (which appears earlier in the exported HTML).
+ const loaderIndex=output.lastIndexOf(loader);
+ if(loaderIndex<0){toast('Unable to package offline archive; use Export JSON');return}
+ output=output.slice(0,loaderIndex)+'save(false);render();'+output.slice(loaderIndex+loader.length);
  if(output.length>85_000_000){toast('HTML archive is over 85 MB. Save a JSON backup instead.');return}
  download('jackson_correspondence_complete_'+data.length+'_letters.html',output,'text/html;charset=utf-8');
  toast('Standalone HTML saved with '+data.length+' records and offline reader scripts');
@@ -349,5 +353,5 @@ async function loadBundledCorrespondence(){
  }
 }
 
-if(window.JacksonReaderUI){$('#filtersMount').innerHTML=JacksonReaderUI.filterBar();JacksonReaderUI.sync()}read.add(state.id);save(false);render();loadLargeArchive();loadBundledCorrespondence();
+if(window.JacksonReaderUI){$('#filtersMount').innerHTML=JacksonReaderUI.filterBar();JacksonReaderUI.sync()}save(false);render();loadLargeArchive();loadBundledCorrespondence();
 </script></body></html>
