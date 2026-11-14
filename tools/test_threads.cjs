@@ -55,4 +55,14 @@ ctx.data.push({id:"j-ambiguous",date:sample.date,from:sample.from,to:sample.to,s
 const after=ui.threadForMessage("j-ambiguous");
 assert.ok(after && after.messages.some(d=>d.id==="j-ambiguous"),"Ambiguous same-day document was silently hidden");
 
+// Multiple query terms can match across metadata and body, and costly OCR
+// normalization happens once per record rather than every keystroke.
+let rawReads=0;
+const costly={from:"Andrew Jackson",to:"Jane",date:"1800-01-01",
+  subject:"Orders",readable:"",get original(){rawReads++;return "Supplies reached Nashville."}};
+assert.equal(ui.matchesQuery(costly,"jane supplies"),true);
+assert.equal(ui.matchesQuery(costly,"Jane NASHVILLE"),true);
+assert.equal(ui.matchesQuery(costly,"jane absent"),false);
+assert.equal(rawReads,1,"Search should cache full-text normalization per record");
+assert.ok(ui.matchesQuery(costly,""));
 console.log("THREAD_TESTS_OK",records.length,"OCR candidates in",total,"email conversations;",thread.messages.length,"Sevier messages grouped");
