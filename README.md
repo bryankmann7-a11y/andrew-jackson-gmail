@@ -4,7 +4,7 @@ An Android app for reading Andrew Jackson's historical correspondence through a 
 
 ## Get the Android app
 
-Download the **JacksonLetters-v3.2.0.apk** file from the [GitHub releases page](https://github.com/bryankmann7-a11y/andrew-jackson-gmail/releases). Open the downloaded APK on Android to install it. An Android browser or file manager may ask for permission to install the APK.
+Download the **JacksonLetters-v3.3.0.apk** file from the [GitHub releases page](https://github.com/bryankmann7-a11y/andrew-jackson-gmail/releases). Open the downloaded APK on Android to install it. An Android browser or file manager may ask for permission to install the APK.
 
 **Do not uninstall an existing copy first.** Its notes, read markers, and stars live on your phone. Installing over the current version should preserve them when both APKs share the same signing key. If Android reports a signature conflict, export your JSON backup from the installed app before making any changes.
 
@@ -22,6 +22,6 @@ Do not quote the OCR as verified historical wording without checking the origina
 
 ## Development and test status
 
-The repository builds an APK with GitHub Actions and runs archival, OCR, interface logic, import/export, and Android compilation checks. An optional Android emulator smoke check exists, but hosted emulator provisioning did not finish reliably during release preparation. The final APK still needs a short check on a physical phone.
+The repository builds an APK with GitHub Actions and runs archival, OCR, interface logic, note and star migration, import/export, and Android compilation checks. The hosted Android emulator failed before reliable app testing, so this is a tested APK build, not a verified physical-phone installation. The final APK still needs a short check on the user's phone.
 
 See [release notes](RELEASE_NOTES.md) and [polish and verification checklist](POLISH_CHECKLIST.md) for limits and remaining editorial work.
