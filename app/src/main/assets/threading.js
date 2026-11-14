@@ -261,14 +261,14 @@
     for(const d of t.messages) read.add(d.id);
     save(false);
     window.__gmailThreadLastId=t.id;
-    render();
+    if(typeof window.render==='function')window.render();else render();
     $("#reader").classList.add("show");
     $("#reader").scrollTop=0;
   }
   function sync() {
     const scroller=$("#reader");
     const y=scroller.scrollTop;
-    render();
+    if(typeof window.render==='function')window.render();else render();
     scroller.scrollTop=y;
   }
   function toggle(id) {
