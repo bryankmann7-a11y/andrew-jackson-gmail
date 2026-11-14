@@ -38,9 +38,19 @@ function collect(other){
  if(cached && cachedCount===data.length && cachedOther===other)return cached;
  const all=data.filter(d => (d.from==="Andrew Jackson" && d.to===other) ||
                              (d.to==="Andrew Jackson" && d.from===other));
- const ocrKeys=new Set(all.filter(d=>d.status==="ocr").map(d=>d.date+"|"+d.from+"|"+d.to));
- const docs=all.filter(d=>d.status==="ocr" || !ocrKeys.has(d.date+"|"+d.from+"|"+d.to))
-               .sort((a,b)=>String(a.date).localeCompare(String(b.date)) || String(a.id).localeCompare(String(b.id)));
+ // Match only known legacy starter adaptations to a UNIQUE OCR candidate.
+ // Unrelated imported letters and ambiguous same-day originals must stay visible.
+ const originals=new Map();
+ for(const d of all)if(d.status==="ocr"){
+   const key=d.date+"|"+d.from+"|"+d.to;
+   originals.set(key,(originals.get(key)||0)+1);
+ }
+ const starterIds=typeof STARTER_LETTERS==="undefined"?new Set():new Set(STARTER_LETTERS.map(d=>d.id));
+ const docs=all.filter(d=>{
+   if(d.status==="ocr")return true;
+   const knownStarter=starterIds.has(d.id)||String(d.id||"").startsWith("j-");
+   return !knownStarter || originals.get(d.date+"|"+d.from+"|"+d.to)!==1;
+ }).sort((a,b)=>String(a.date).localeCompare(String(b.date)) || String(a.id).localeCompare(String(b.id)));
  cached=docs;cachedCount=data.length;cachedOther=other;
  return docs;
 }
