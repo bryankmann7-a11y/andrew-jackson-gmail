@@ -64,6 +64,7 @@ function messageText(d){return String(d.modern||d.readable||d.original||"Text no
 function dateGroup(d){return String(d.date||"Unknown").slice(0,7);}
 function qualityLabel(d){
  if(d.modern)return "Condensed modern English · not scan-verified";
+ if(d.status==="ocr" && Array.isArray(d.ocrFlags) && d.ocrFlags.length)return "Uncorrected OCR · source review needed";
  if(d.status==="ocr")return "Uncorrected OCR reading copy · not translated";
  return "Earlier adaptation · source not fully checked";
 }
