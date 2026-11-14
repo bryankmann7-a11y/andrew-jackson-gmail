@@ -46,4 +46,24 @@ let biggest=0;
 const others=new Set(letters.map(x=>x.from==="Andrew Jackson"?x.to:x.from));
 for (const other of others) biggest=Math.max(biggest,ui.collect(other).length);
 assert.ok(biggest>50,"Paging not tested on a long correspondence");
+// Regression: SMS → full Gmail email must select the Mail tab, not call .forEach on a single element.
+const tabs=[{dataset:{view:"mail"},classList:{toggle(name,on){this.selected=on}}},
+            {dataset:{view:"sms"},classList:{toggle(name,on){this.selected=on}}}];
+let selectedId=null,skipNav=null,enterCount=0,expandedId=null;
+ctx.document.querySelectorAll=selector=>{
+  assert.equal(selector,"#viewMode button");
+  return tabs;
+};
+ctx.window.JacksonNav={enter(){enterCount++}};
+ctx.JacksonNav=ctx.window.JacksonNav;
+ctx.GmailThreadUI={setExpanded(id){expandedId=id}};
+ctx.selectLetter=(id,skip)=>{selectedId=id;skipNav=skip};
+ui.openAsLetter(selected.id);
+assert.equal(ctx.state.view,"mail");
+assert.equal(selectedId,selected.id);
+assert.equal(skipNav,true);
+assert.equal(expandedId,selected.id);
+assert.equal(enterCount,1);
+assert.equal(tabs[0].classList.selected,true);
+assert.equal(tabs[1].classList.selected,false);
 console.log("SMS_TESTS_OK",letters.length,"historical OCR entries;",all.length,"Sevier letters;",biggest,"max correspondent letters; window",selectedWindow.end-selectedWindow.start);
