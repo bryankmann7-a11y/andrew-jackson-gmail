@@ -16,4 +16,6 @@ assert.ok(html.includes("loadBundledCorrespondence();"),"Offline corpus loader m
 assert.ok(html.includes("archiveLoadStatus='loading'"),"Initial loading message missing");
 assert.ok(html.includes("archiveLoadStatus='ready'"),"Successful load state missing");
 assert.ok(html.includes("archiveLoadStatus='error'"),"Failure state missing");
+assert.ok(html.includes("}save(false);render();loadLargeArchive();loadBundledCorrespondence();"),
+  "Inbox startup must not mark an unopened letter read");
 console.log("WEBVIEW_INLINE_TEST_OK: parsing, module order, archive start/failure states");
