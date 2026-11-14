@@ -1,19 +1,27 @@
-# Jackson Letters Android
+# Jackson Letters — offline Android correspondence reader
 
-An offline, Gmail-style Android reader for the historical correspondence of Andrew Jackson.
+An Android app for reading Andrew Jackson's historical correspondence through a familiar Gmail-style inbox and message threads. It is an offline historical reader, **not** an email client.
 
-The APK bundles OCR-based correspondence candidates extracted from all six public-domain Bassett volumes, with a Gmail-style inbox and possible reply threads, an optional SMS-style chronological view, search, notes, stars, contacts, source links, and offline data export. The historical letters were never emails; the Gmail appearance is a reading interface only.
+## Get the Android app
 
-## Archive contents and limitations
+Download the **JacksonLetters-v3.2.0.apk** file from the [GitHub releases page](https://github.com/bryankmann7-a11y/andrew-jackson-gmail/releases). Open the downloaded APK on Android to install it. An Android browser or file manager may ask for permission to install the APK.
 
-- **2,116 automatically extracted correspondence candidates** (not verified transcripts of 2,116 original letters).
-- **1,902 provisional email-style conversations** from matching names, dates and textual references. Thread links may be uncertain; no missing replies are invented.
-- **33 editorially labelled plain-English reading aids**; the remaining entries generally show OCR reading copies.
-- **286 entries flagged for OCR review** in the November 14, 2026 build, including **43 explicitly marked unreadable fragments**. An `[unclear OCR]` marker means the text could not be safely reconstructed from OCR alone.
-- Each letter retains its original uncorrected OCR text alongside its display-only cleaned reading copy. Human verification against page images is still required before quoting or treating a document as definitive.
+**Do not uninstall an existing copy first.** Its notes, read markers, and stars live on your phone. Installing over the current version should preserve them when both APKs share the same signing key. If Android reports a signature conflict, export your JSON backup from the installed app before making any changes.
 
-## Android build
+This is a personal, debug-signed Android APK, not a Google Play release. Android 8.0+ is supported.
 
-The project is built using the GitHub Actions workflow **Build Jackson Letters APK**. After a successful run, download the **JacksonLetters-debug-APK** artifact from the workflow's Artifacts section. The current APK is a debug build, not a Google Play release. Installation has been confirmed on the user's Android phone, but full handset regression testing remains outstanding.
+## What is in the archive
 
-**Project checklist:** [POLISH_CHECKLIST.md](POLISH_CHECKLIST.md). The user wants one final APK after remaining polish, not an installation after every development build.
+- **2,116 historical OCR correspondence candidates** extracted automatically from six public-domain Bassett volumes—not 2,116 independently verified manuscript transcriptions.
+- **1,902 candidate email-style conversations** grouped cautiously by correspondents, dates and possible reply references.
+- **33 labelled plain-English editorial reading aids**. Other entries generally display OCR reading copies, not English translations.
+- **286 entries flagged for human OCR review** in the November 2026 audit. The separate original OCR is retained, and uncertain fragments are explicitly labelled.
+- Gmail-style threads, SMS-like chronology, offline search and filters, adjustable reading styles, source links, notes, stars, import and export.
+
+Do not quote the OCR as verified historical wording without checking the original scan. No missing replies are invented.
+
+## Development and test status
+
+The repository builds an installable APK with GitHub Actions, runs archival and UI-logic regression tests, and runs an offline Android emulator smoke test as part of its release workflow. A passing emulator launch does not replace checking the final installation on the user's physical phone.
+
+See [release notes](RELEASE_NOTES.md) and [polish and verification checklist](POLISH_CHECKLIST.md) for limits and remaining editorial work.
