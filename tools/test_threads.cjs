@@ -65,4 +65,16 @@ assert.equal(ui.matchesQuery(costly,"Jane NASHVILLE"),true);
 assert.equal(ui.matchesQuery(costly,"jane absent"),false);
 assert.equal(rawReads,1,"Search should cache full-text normalization per record");
 assert.ok(ui.matchesQuery(costly,""));
-console.log("THREAD_TESTS_OK",records.length,"OCR candidates in",total,"email conversations;",thread.messages.length,"Sevier messages grouped");
+// Older installations may have a favorite on the adapted starter ID.
+ // Toggling the merged OCR letter must remove that legacy favorite as well.
+ ctx.starred.add("j-test-duplicate");
+ assert.ok(ui.counts("starred")>=1);
+ ctx.$=()=>({scrollTop:0});
+ ctx.save=()=>{};
+ ctx.window.render=()=>{};
+ ui.star(sample.id);
+ assert.equal(ctx.starred.has("j-test-duplicate"),false,"Legacy favorite was not removable");
+ assert.equal(ctx.starred.has(sample.id),false);
+ ui.star(sample.id);
+ assert.equal(ctx.starred.has(sample.id),true,"Canonical favorite was not created");
+ console.log("THREAD_TESTS_OK",records.length,"OCR candidates in",total,"email conversations;",thread.messages.length,"Sevier messages grouped");
