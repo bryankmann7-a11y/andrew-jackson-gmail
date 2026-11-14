@@ -4,7 +4,7 @@ on:
     branches: [main]
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
 jobs:
   android:
     runs-on: ubuntu-latest
@@ -91,3 +91,49 @@ jobs:
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 30
+      # Only the explicitly named release commit publishes an installable APK.
+      # This test launches the actual offline APK in a clean Android WebView.
+      - name: Offline Android emulator smoke test
+        if: startsWith(github.event.head_commit.message, 'Release Jackson Letters v3.2.0')
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          target: google_apis
+          arch: x86_64
+          profile: pixel_2
+          disable-animations: true
+          script: |
+            set -euo pipefail
+            mkdir -p reports
+            adb install -r app/build/outputs/apk/debug/app-debug.apk
+            adb shell svc wifi disable
+            adb shell svc data disable
+            adb shell am start -W -n org.jacksonletters.archive.parallelv3/org.jacksonletters.archive.MainActivity
+            sleep 20
+            adb shell pidof org.jacksonletters.archive.parallelv3
+            adb shell uiautomator dump /sdcard/jackson-smoke.xml
+            adb pull /sdcard/jackson-smoke.xml reports/jackson-smoke.xml
+            adb shell screencap -p /sdcard/jackson-smoke.png
+            adb pull /sdcard/jackson-smoke.png reports/jackson-smoke.png
+            grep -Eiq 'All conversations|All correspondence|2,116|2,1[0-9][0-9]|Correspondence with' reports/jackson-smoke.xml
+      - name: Upload emulator screenshot
+        if: always() && startsWith(github.event.head_commit.message, 'Release Jackson Letters v3.2.0')
+        uses: actions/upload-artifact@v4
+        with:
+          name: JacksonLetters-Android-Smoke
+          path: reports/jackson-smoke.*
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Publish Android APK release
+        if: startsWith(github.event.head_commit.message, 'Release Jackson Letters v3.2.0')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp app/build/outputs/apk/debug/app-debug.apk JacksonLetters-v3.2.0.apk
+          sha256sum JacksonLetters-v3.2.0.apk > JacksonLetters-v3.2.0.sha256
+          gh release create v3.2.0 JacksonLetters-v3.2.0.apk JacksonLetters-v3.2.0.sha256 \
+            --target "$GITHUB_SHA" \
+            --title "Jackson Letters v3.2.0" \
+            --notes-file RELEASE_NOTES.md
