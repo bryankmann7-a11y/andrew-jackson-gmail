@@ -56,6 +56,8 @@ public final class MainActivity extends Activity {
           String mime="text/plain";
           if(path.equals("/")||path.equals("/index.html")){
             input=getAssets().open("index.html");mime="text/html";
+          }else if(path.equals("/sms_view.js")){
+            input=getAssets().open("sms_view.js");mime="application/javascript";
           }else if(path.equals("/threading.js")){
             input=getAssets().open("threading.js");mime="application/javascript";
           }else if(path.equals("/archive/corpus.json")){
