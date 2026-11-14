@@ -41,5 +41,19 @@ vm.runInContext(html.slice(start,end)+"\nwindow.saveStandalone=downloadCompiledH
  assert.equal(artifact.blob.split("read.add(state.id);save(false);render();loadLargeArchive();loadBundledCorrespondence();").length-1,1,"Standalone export should retain this loader only as an inert string inside the exporter function, not call it");
  assert.ok(artifact.blob.includes("\\u003c/script"),"Embedded JSON wasn't HTML-escaped");
  assert.ok(artifact.blob.includes("My note") && artifact.blob.includes("A letter with angle brackets"));
- console.log("STANDALONE_EXPORT_TESTS_OK: embedded archive, four scripts, notes and safe JSON");
+ // Importing an exported letter must not silently strip its OCR review status,
+ // source page or editorial provenance. User records can keep those fields.
+ const normalizeStart=html.indexOf("function normalize(item,i){");
+ const normalizeEnd=html.indexOf("\nlet lastImportSavedPromise",normalizeStart);
+ assert.ok(normalizeStart>0&&normalizeEnd>normalizeStart);
+ const importer=vm.runInNewContext("("+html.slice(normalizeStart,normalizeEnd)+")");
+ const imported=importer({id:"sample",date:"1814-06-01",from:"Andrew Jackson",
+   to:"John Coffee",original:"Text",readable:"Cleaned display",ocrFlags:["symbol_in_word"],
+   needsReview:true,volume:2,page:110,sourceChecked:false,modernType:"not yet written"},0);
+ assert.equal(imported.readable,"Cleaned display");
+ assert.equal(imported.ocrFlags[0],"symbol_in_word");
+ assert.equal(imported.needsReview,true);
+ assert.equal(imported.page,110);
+ assert.equal(imported.sourceChecked,false);
+ console.log("STANDALONE_EXPORT_TESTS_OK: embedded archive, four scripts, notes, safe JSON, OCR import metadata");
 })().catch(err=>{console.error(err);process.exitCode=1});
