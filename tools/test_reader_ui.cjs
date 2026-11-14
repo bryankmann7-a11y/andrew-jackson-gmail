@@ -87,4 +87,7 @@ assert.ok(html.includes('id="filtersMount"'));
 assert.ok(html.includes("JacksonReaderUI.filterBar()"));
 assert.ok(threads.includes("JacksonReaderUI.matches(d)"));
 assert.ok(threads.includes("JacksonReaderUI.controls()"));
+assert.ok(html.includes('oninput="queueNoteSave('),"Legacy letter notes must autosave");
+assert.ok(html.includes("x.modern?'Plain English':'OCR reading copy'"),"OCR-only entries must not claim to be translated");
+assert.ok(html.includes("archiveLoadStatus='ready'"),"Archive must show a loading state until ready");
 console.log("READER_UI_TESTS_OK: periods, editions, OCR review, themes, text size, persistence, no source mutation");
