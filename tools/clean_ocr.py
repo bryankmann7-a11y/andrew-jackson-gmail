@@ -31,6 +31,11 @@ MONTH_HEADER = re.compile(
 # Monetary amounts such as $350 and normal historic spellings are untouched.
 GARBLED = re.compile(r'(?<!\w)([A-Za-z]{3,})[$#@~^*|+][0-9_.\-\\/]{1,8}([A-Za-z]{3,})(?!\w)')
 PAGE_STITCH = re.compile(r'(?<=\w)-[ \t]*(?:\n[ \t]*){1,3}(?=[a-z])')
+# All matching examples in the six-volume audit were distorted printings of
+# 'William'. Restrict this pattern to the distinctive 1-am ending; do not
+# apply a general 1->i substitution to arbitrary historical words.
+MISREAD_WILLIAM = re.compile(r'(?i)\bW[ilutxr]{1,8}1a{0,2}m{1,2}\b')
+
 
 
 def clean_ocr_text(text):
@@ -41,6 +46,10 @@ def clean_ocr_text(text):
     s = SPLIT_PAGE.sub(lambda m: m.group('stem') + m.group('end'), s)
     s = EMBEDDED_PAGE.sub(lambda m: m.group('stem') + m.group('end'), s)
     s = PAGE_TITLE.sub('', s)
+    s = MISREAD_WILLIAM.sub('William', s)
+    s = re.sub(r'(?i)\bSmi1th\b', 'Smith', s)
+    s = re.sub(r'(?i)\bDivis1on\b', 'Division', s)
+    s = re.sub(r'(?i)\bthou8ands\b', 'thousands', s)
     s = GARBLED.sub(lambda m: m.group(1) + ' [unclear OCR] ' + m.group(2), s)
     # Collapsing excess blank lines before stitching handles a page break
     # where the printed running header occupied multiple blank lines.
