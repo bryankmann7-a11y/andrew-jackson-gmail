@@ -51,6 +51,10 @@ jobs:
           path: reports/ocr_review.csv
           if-no-files-found: error
           retention-days: 30
+      - name: Test archive filters and reading preferences
+        run: |
+          node --check app/src/main/assets/reader_ui.js
+          node tools/test_reader_ui.cjs
       - name: Verify Gmail conversation threading
         run: |
           node --check app/src/main/assets/threading.js
