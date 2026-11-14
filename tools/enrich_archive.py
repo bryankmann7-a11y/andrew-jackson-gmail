@@ -251,12 +251,9 @@ def normalize_person(name):
     return n
 
 def reading_copy(s):
-    # Presentation only. Original raw OCR stays untouched.
-    s=s.replace('\r\n','\n')
-    s=re.sub(r'(?<=\w)-\s*\n\s*(?=\w)','',s)
-    s=re.sub(r'(?<=[a-z,;])\n(?=[a-z])',' ',s)
-    s=re.sub(r'\n\s*\n\s*\n+','\n\n',s)
-    return s.strip()
+    # Original OCR is retained in the 'original' field, byte-for-byte.
+    from clean_ocr import clean_ocr_text
+    return clean_ocr_text(s)
 
 def enrich(letters):
     for d in letters:
@@ -266,7 +263,9 @@ def enrich(letters):
         d['to']=normalize_person(d['to'])
         d['subject']=d['from']+' to '+d['to']+' ('+d['date']+')'
         d['readable']=reading_copy(d['original'])
-        d['textQuality']='uncorrected OCR; mechanically reflowed reading copy is not a transcription check'
+        d['textQuality']='uncorrected OCR; page furniture removed and suspicious spans flagged in reading copy, not checked against scan'
+        d['ocrUnclearSpans']=d['readable'].count('[unclear OCR]')
+        d['needsReview']=d.get('needsReview',False) or bool(d['ocrUnclearSpans'])
         other=d['to'] if d['from']=='Andrew Jackson' else d['from']
         key=d['date']+'|'+other
         dialogue=d['date']+'|'+d['from']+'|'+d['to']
