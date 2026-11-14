@@ -15,7 +15,7 @@ Current baseline: Android WebView APK with the six Bassett OCR volumes; about 2,
 
 - [x] **P1-00 Gmail email threading.** Mail inbox now groups possible replies into one conversation; messages expand/collapse and show source/OCR/reading tabs; May 1797 Jackson–Sevier exchange regression-tested. Individual links remain clearly marked as unverified unless stronger evidence exists.
 
-- [ ] **P1-01 Mobile navigation.** Make inbox → letter → back predictable with Android system Back button/gesture, preserving search/filter and scroll position.
+- [x] **P1-01 Mobile navigation.** Android Back button/gesture now closes dialogs and drawers first, dismisses the keyboard when editing, restores reader/inbox/profile navigation state, preserves search/filter and scroll position, supports SMS → full email → SMS, and survives rotation. Automated regression and APK compile tests pass; physical-phone smoke testing remains open under P0-02.
 - [ ] **P1-02 Better inbox.** Clear correspondence direction, sender, recipient, historical date, excerpt and source-quality badge, compact mobile rows, optional unread/star markers, and grouping by decade/year.
 - [ ] **P1-03 Search, sort and filters.** Fast, indexed search over names/dates/body/subject; filters for sender, recipient, period, modern-English available, OCR-only, verified, starred; show result totals and highlights.
 - [x] **P1-04 Chat view usability.** The SMS view now uses bounded chronological history (48 letters per window), date separators, sent/received bubbles, collapsible previews for long letters, scroll-to-selected and direct original/source links. It does not fabricate missing replies. Gmail Mail view keeps its independently labeled candidate reply threads.
