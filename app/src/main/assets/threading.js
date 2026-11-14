@@ -46,18 +46,24 @@
     const byKey = new Map();
     const originals = new Map();
     const all = data.slice();
+    const starterIds = typeof STARTER_LETTERS === "undefined" ? new Set() : new Set(STARTER_LETTERS.map(x=>x.id));
     for (const d of all) {
       if (d.status === "ocr") {
         const k = d.date + "|" + d.from + "|" + d.to;
-        if (!originals.has(k)) originals.set(k, d);
+        if (!originals.has(k)) originals.set(k,[]);
+        originals.get(k).push(d);
       }
     }
     const keep = [];
     for (const d of all) {
       const k = d.date + "|" + d.from + "|" + d.to;
-      const canonical = originals.get(k);
-      if (d.id && d.id.startsWith("j-") && canonical) {
-        if (!byKey.has(k)) byKey.set(k, d);
+      const matches = originals.get(k)||[];
+      // Collapse only a known starter adaptation and only where exactly one
+      // scan-derived document has the same sender, recipient and date.
+      // Multiple OCR documents on one date are too ambiguous to merge.
+      const legacy = d.status!=="ocr" && (starterIds.has(d.id) || String(d.id||"").startsWith("j-"));
+      if (legacy && matches.length === 1) {
+        if (!byKey.has(k)) byKey.set(k,d);
         continue;
       }
       keep.push(d);
@@ -65,9 +71,11 @@
     for (const d of keep) {
       const k = d.date + "|" + d.from + "|" + d.to;
       const legacy = byKey.get(k);
-      if (legacy && d.status === "ocr" && !d.modern && legacy.modern) {
-        d._legacyAdaptation = legacy.modern;
+      if (legacy && d.status === "ocr") {
+        // Preserve old starred, unread and notes references on an OCR entry
+        // even if the OCR entry already has its own modern reading.
         d._legacyId = legacy.id;
+        if (!d.modern && legacy.modern) d._legacyAdaptation = legacy.modern;
       }
     }
     keep.sort((a,b) => String(a.date).localeCompare(String(b.date)) || String(a.id).localeCompare(String(b.id)));
