@@ -1,15 +1,15 @@
 # Jackson Letters — Polish checklist
 
-Current baseline: Android WebView APK with the six Bassett OCR volumes; 2,116 automatically extracted correspondence candidates (not 2,116 verified historical letter transcripts), 24 labelled plain-English renderings, and a Gmail / SMS-style UI. Work must preserve raw source text and identify conjecture rather than fabricating letters.
+Current baseline: Android WebView APK with the six Bassett OCR volumes; 2,116 automatically extracted correspondence candidates (not 2,116 verified historical letter transcripts), 33 labelled plain-English renderings, and a Gmail / SMS-style UI. Work must preserve raw source text and identify conjecture rather than fabricating letters.
 
 ## P0 — Fix what blocks normal use
 
 - [x] **P0-01 Installation.** Current APK installs successfully on the user's phone. No upgrade or ongoing update system is needed; deliver one final APK when the app is finished.
 - [ ] **P0-02 Actual Android smoke test.** Installation is confirmed by the user; still test first launch, offline launch, inbox, message view, search, star, notes, export/import, device Back, rotation, screen size, and return from background. Confirm no blank screen, WebView exceptions, or freezes.
 - [ ] **P0-03 Start-up and large corpus performance.** Show a real loading state; avoid making one giant synchronous 20-MB+ JSON parse and full-body scan on each keystroke. Measure start-up time, memory, scrolling, and low-end-device behavior.
-- [ ] **P0-04 Distinguish documents that have multiple representations.** Merge the 14 demo/adapted entries with matching real OCR document IDs instead of showing an apparent duplicate; never quietly overwrite the source; retain legacy notes/star links.
+- [x] **P0-04 Avoid duplicated starter correspondence.** Match starter adaptations to source OCR only when the date, sender, recipient and a unique original agree; preserve original OCR, legacy notes/stars and uncertain same-day alternatives. Automated regression passes.
 - [ ] **P0-05 Archive verification pipeline.** Detect suspicious dates, implausible names, merges/splits between documents, footnotes, pages and other editorial artifacts. Maintain an audit trail and a 'needs checking' status. Never label OCR automatically 'source-verified.'
-- [ ] **P0-06 Correctly describe content and offline state.** Remove misleading 'Load six books' prompts after offline archive is bundled, and make the archive help text, status counts, first-run instructions and download messages reflect the installed version.
+- [x] **P0-06 Accurate offline messaging.** Removed the misleading load-six-books prompts, corrected archive counts and clearly separated OCR from modern-English adaptations. Offline bundle verified in Android build.
 
 ## P1 — Make it pleasant to read
 
@@ -17,12 +17,12 @@ Current baseline: Android WebView APK with the six Bassett OCR volumes; 2,116 au
 
 - [x] **P1-01 Mobile navigation.** Android Back button/gesture now closes dialogs and drawers first, dismisses the keyboard when editing, restores reader/inbox/profile navigation state, preserves search/filter and scroll position, supports SMS → full email → SMS, and survives rotation. Automated regression and APK compile tests pass; physical-phone smoke testing remains open under P0-02.
 - [ ] **P1-02 Better inbox.** Clear correspondence direction, sender, recipient, historical date, excerpt and source-quality badge, compact mobile rows, optional unread/star markers, and grouping by decade/year.
-- [ ] **P1-03 Search, sort and filters.** Fast, indexed search over names/dates/body/subject; filters for sender, recipient, period, modern-English available, OCR-only, verified, starred; show result totals and highlights.
+- [ ] **P1-03 Search, sort and filters (partially complete).** Search by names, dates, body and subject; chronological sort, folder filters, plus period, plain-English, OCR-only and needs-review filters now work with Gmail threads. Debounce reduces repeated searches; indexed search, explicit correspondent filters and result highlighting remain open.
 - [x] **P1-04 Chat view usability.** The SMS view now uses bounded chronological history (48 letters per window), date separators, sent/received bubbles, collapsible previews for long letters, scroll-to-selected and direct original/source links. It does not fabricate missing replies. Gmail Mail view keeps its independently labeled candidate reply threads.
-- [ ] **P1-05 Reading controls.** Adjustable text size, line spacing, sepia/dark theme, readable headers and link styling, position memory and a clean distraction-free letter view.
+- [x] **P1-05 Reading controls.** Adjustable font size, line spacing, paper/sepia/night reading colors, persisted preferences, and returning to the reader's former position via app navigation. Automated checks pass; Android handset visual QA remains open.
 - [ ] **P1-06 Sources beside every letter.** Show a readable volume, approximate page (when known), stable source URL, OCR quality, and direct access to scanned pages where a verified page locator exists; avoid false precision.
 - [ ] **P1-07 Contacts and conversations.** Normalize only confident name variants, retain original OCR headings, handle similarly named individuals without merging them, and give each correspondent a chronological sent/received timeline.
-- [ ] **P1-08 Notes and local data.** Autosave notes reliably; export/import notes, bookmarks, reading state and user-corrected names; backup/export test. Avoid silent loss during normal use.
+- [ ] **P1-08 Notes and local data (partially complete).** Autosave notes and export/import personal state; standalone HTML export now includes all four offline reader scripts and data, with regression tests for saved notes. Full Android backup/restore and migration smoke test remains open.
 - [ ] **P1-09 Accessibility.** Large tap targets, labels and semantic controls, TalkBack reading order, contrast, Dynamic Type/font scaling, and keyboard focus.
 
 ## P2 — Content and product quality
@@ -34,11 +34,16 @@ Current baseline: Android WebView APK with the six Bassett OCR volumes; 2,116 au
 
 
 - [ ] **P2-01 Historical editorial pass.** Check documents against actual volume pages; fix dates/people/page references; flag missing, truncated, and combined entries; review at least a sample from each decade before trusting bulk extraction.
-- [ ] **P2-02 Plain-English editions.** For each corrected letter, create a faithful modern-English version in deliberate batches, preserve the original and source citation, and mark omissions and interpretive choices. Do not generate 'replies' that don't survive.
+- [ ] **P2-02 Plain-English editions (ongoing editorial work).** Added nine further short OCR-grounded adaptations (1806–1813), bringing the total to 33. Historical source OCR is preserved and none is presented as scan-verified. The majority of correspondence still needs human editorial work; missing replies must not be invented.
 - [ ] **P2-03 Real profiles, careful portraits.** Separate verified biography from speculative illustration; don't label generated pictures as authentic portraits. Add sourced descriptions and relationship context.
 - [ ] **P2-04 Timeline and orientation.** Decade navigation, year/date jump, dated events only with supporting sources, and a clear indication when a date is approximate.
 - [ ] **P2-05 Final visual pass.** Consistent iconography, spacing, color/theme, typography, transitions and empty/error/loading states. Keep familiar Gmail-inspired structure without implying these were electronic messages.
 - [ ] **P2-06 Regression checks.** Automated corpus tests plus repeatable phone-sized UI tests: first letter, oldest/newest, bulk search, large conversation, back navigation, export/import, offline mode and update APK.
+
+## Latest verified build
+
+- GitHub Actions run 103 (commit `5b844f759c7032f7d66375023703a6a52f32ac95`): all archive integrity, reader/filter, standalone HTML export, Gmail threading, SMS, navigation and APK build tests passed.
+- 2,116 OCR candidates, 33 modern-English reading aids, and 253 OCR review candidates. UI automation on a physical Android phone remains outstanding.
 
 ## Working order
 
