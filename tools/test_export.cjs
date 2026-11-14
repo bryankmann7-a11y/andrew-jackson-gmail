@@ -7,6 +7,12 @@ const html=fs.readFileSync(path.join(assets,"index.html"),"utf8");
 const start=html.indexOf("async function downloadCompiledHTML(){");
 const end=html.indexOf("\nfunction exportData(){",start);
 assert.ok(start>0&&end>start,"Export function missing");
+
+const inlineBegin=html.indexOf("<script>\nconst STARTER_LETTERS="),inlineEnd=html.lastIndexOf("</script>");
+assert.ok(inlineBegin>0 && inlineEnd>inlineBegin);
+assert.ok(!html.slice(inlineBegin+8,inlineEnd).toLowerCase().includes("</script>"),
+  "The HTML parser will prematurely terminate the main script");
+
 let artifact=null,toastText="";
 const source=html.replace(/^<!doctype html>\s*/i,"");
 const element={querySelector:()=>null,outerHTML:source};
