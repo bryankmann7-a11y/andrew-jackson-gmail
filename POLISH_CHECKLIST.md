@@ -27,6 +27,9 @@ Current baseline: Android WebView APK with the six Bassett OCR volumes; about 2,
 
 ## P2 — Content and product quality
 
+- [x] **P2-00 Automated OCR display cleanup.** Remove printed page headers/page numbers from readable copies; rejoin words split across pages; explicitly flag embedded unreadable symbols, e.g. `John$-11called` → `John [unclear OCR] called`; preserve verbatim `original` field. Filter a known misclassified table-of-contents item and test fixes against all six volumes. Further source-by-source corrections remain open.
+
+
 - [ ] **P2-01 Historical editorial pass.** Check documents against actual volume pages; fix dates/people/page references; flag missing, truncated, and combined entries; review at least a sample from each decade before trusting bulk extraction.
 - [ ] **P2-02 Plain-English editions.** For each corrected letter, create a faithful modern-English version in deliberate batches, preserve the original and source citation, and mark omissions and interpretive choices. Do not generate 'replies' that don't survive.
 - [ ] **P2-03 Real profiles, careful portraits.** Separate verified biography from speculative illustration; don't label generated pictures as authentic portraits. Add sourced descriptions and relationship context.
