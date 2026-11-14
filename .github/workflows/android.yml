@@ -28,6 +28,12 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
+      - name: Preflight Python and JavaScript syntax
+        run: |
+          python3 -m py_compile tools/build_archive.py tools/enrich_archive.py tools/ocr_audit.py tools/clean_ocr.py tools/test_ocr_review.py
+          node --check app/src/main/assets/threading.js
+          node --check app/src/main/assets/sms_view.js
+          node --check app/src/main/assets/navigation.js
       - name: Download and separate Bassett volumes I–VI
         run: |
           python3 tools/build_archive.py
