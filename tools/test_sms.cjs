@@ -42,6 +42,21 @@ if(veryLong){
   const individual=ui.render(veryLong);
   assert.ok(individual.includes("Read full letter"),"Full text should be collapsible");
 }
+// Never erase uncertain same-day correspondence or imported documents.
+const source=letters.find(d=>d.status==="ocr" && d.from==="Andrew Jackson" && d.to==="Waightstill Avery");
+assert.ok(source);
+const sourceOther="Waightstill Avery";
+const count0=ui.collect(sourceOther).length;
+ctx.data.push({id:"j-sms-known-adaptation",date:source.date,from:source.from,to:source.to,
+               status:"adapted",modern:"Historical starter text"});
+assert.equal(ui.collect(sourceOther).length,count0,"Unique OCR should replace a known starter copy");
+ctx.data.push(Object.assign({},source,{id:"basset-extra-same-day"}));
+assert.equal(ui.collect(sourceOther).length,count0+2,
+ "Two originals on one day are ambiguous; preserve both and the starter");
+ctx.data.push({id:"user-import-unique",date:source.date,from:source.from,to:source.to,
+               status:"original",original:"A separate imported record"});
+assert.equal(ui.collect(sourceOther).length,count0+3,
+ "Never silently discard a user-imported document");
 let biggest=0;
 const others=new Set(letters.map(x=>x.from==="Andrew Jackson"?x.to:x.from));
 for (const other of others) biggest=Math.max(biggest,ui.collect(other).length);
