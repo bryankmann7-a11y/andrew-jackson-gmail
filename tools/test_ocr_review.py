@@ -55,6 +55,8 @@ for uid,(date,phrases) in additional_letters.items():
 assert "referred to yourself, not to me" in by_id["basset-1-540838e26cba234"]["modern"]
 assert normalize_person("John Oveertonn")=="John Overton"
 assert normalize_person("Jouhn Coffee")=="John Coffee"
+assert normalize_person("John Cooffee")=="John Coffee"
+assert normalize_person("W. C. C, Clarborne")=="William C. C. Claiborne"
 assert normalize_person("James K. Porx")=="James K. Polk"
 assert normalize_person("Major Witiaam B. Lewis")=="William B. Lewis"
 assert normalize_person("Major Wil.Iam B. Lewits")=="William B. Lewis"
