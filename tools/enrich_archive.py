@@ -217,6 +217,8 @@ def normalize_person(name):
     t=TITLES.sub('',n)
     n=ALIASES.get(key_name(n),ALIASES.get(key_name(t),n))
     # Explicit role aliases; avoid merging less certain unknowns.
+    for canonical in CANONICAL:
+        if key_name(n)==key_name(canonical):return canonical
     return n
 
 def reading_copy(s):
