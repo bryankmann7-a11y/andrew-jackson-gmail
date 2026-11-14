@@ -13,10 +13,12 @@ Current baseline: Android WebView APK with the six Bassett OCR volumes; about 2,
 
 ## P1 — Make it pleasant to read
 
+- [x] **P1-00 Gmail email threading.** Mail inbox now groups possible replies into one conversation; messages expand/collapse and show source/OCR/reading tabs; May 1797 Jackson–Sevier exchange regression-tested. Individual links remain clearly marked as unverified unless stronger evidence exists.
+
 - [ ] **P1-01 Mobile navigation.** Make inbox → letter → back predictable with Android system Back button/gesture, preserving search/filter and scroll position.
 - [ ] **P1-02 Better inbox.** Clear correspondence direction, sender, recipient, historical date, excerpt and source-quality badge, compact mobile rows, optional unread/star markers, and grouping by decade/year.
 - [ ] **P1-03 Search, sort and filters.** Fast, indexed search over names/dates/body/subject; filters for sender, recipient, period, modern-English available, OCR-only, verified, starred; show result totals and highlights.
-- [ ] **P1-04 Chat view usability.** Render concise previews with 'read more' on long letters instead of dropping entire documents into massive SMS bubbles. Include date separators, direction, scroll-to-selected, and clear indication that no historically verified reply relationship exists.
+- [ ] **P1-04 Chat view usability.** The separate SMS view still needs concise previews with 'read more' on long letters, date separators, direction and scroll-to-selected. Gmail Mail view now groups likely historical reply chains and explicitly labels unverified inference.
 - [ ] **P1-05 Reading controls.** Adjustable text size, line spacing, sepia/dark theme, readable headers and link styling, position memory and a clean distraction-free letter view.
 - [ ] **P1-06 Sources beside every letter.** Show a readable volume, approximate page (when known), stable source URL, OCR quality, and direct access to scanned pages where a verified page locator exists; avoid false precision.
 - [ ] **P1-07 Contacts and conversations.** Normalize only confident name variants, retain original OCR headings, handle similarly named individuals without merging them, and give each correspondent a chronological sent/received timeline.
