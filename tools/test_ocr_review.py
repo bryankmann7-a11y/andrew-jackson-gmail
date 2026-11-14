@@ -26,6 +26,7 @@ for uid,(date,person,words) in samples.items():
  assert d["status"]=="ocr" and d["sourceChecked"] is False
  assert d["ocrFlags"]==audit_letter(d)
 
+assert "referred to yourself, not to me" in by_id["basset-1-540838e26cba234"]["modern"]
 assert normalize_person("John Oveertonn")=="John Overton"
 assert normalize_person("Jouhn Coffee")=="John Coffee"
 assert normalize_person("James K. Porx")=="James K. Polk"
