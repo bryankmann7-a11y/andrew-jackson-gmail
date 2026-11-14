@@ -25,7 +25,9 @@ IDS = {i: f'correspondenceof000{i}jack' for i in range(1,7)}
 YEARS = {1:(1788,1814),2:(1814,1819),3:(1820,1828),4:(1829,1832),5:(1833,1838),6:(1839,1845)}
 MONTHS = {k.lower()[:3]:i for i,k in enumerate(
     ['January','February','March','April','May','June','July','August','September','October','November','December'],1)}
+MONTHS['agu']=8
 MON = r'January|February|March|April|May|June|July|August|September|October|November|December|Jan\.?|Feb\.?|Mar\.?|Apr\.?|Jun\.?|Jul\.?|Aug\.?|Sept?\.?|Oct\.?|Nov\.?|Dec\.?'
+MON += '|Agust'
 DATE = re.compile(r'\b(' + MON + r')\s*([0-3]?\d)(?:st|nd|rd|th|d)?\s*[,.;]?\s*(17[89]\d|18[0-4]\d)\b', re.I)
 YEAR = re.compile(r'\b(17[89]\d|18[0-4]\d)\b')
 PAGE1 = re.compile(r'^\s*(\d{1,4})\s+Correspondence of Andrew Jackson\s*$', re.I)
@@ -105,6 +107,9 @@ def heading(line):
     m=re.fullmatch(r'(?:To|T[o0])\s+(.{3,100})',s,re.I)
     if m:
         name=clean_name(m.group(1))
+        if len(name)>90 or len(name.split())>15:return
+        if name and name[0].islower() and not re.match(r'(?i)^(the|his|her|our|a|an)\b',name):return
+        if re.search(r'(?i)\b(that|which|because|having|was|were|would|should|been|are)\b',name):return
         if re.match(r'(?i)^(be|the attention|the contrary|the reader|this|what|whom)\b',name):return
         if re.search(r'[a-z]{4}\s+[a-z]{4}\s+[a-z]{4}\s+[a-z]{4}\s+[a-z]{4}',name):return
         return ('Andrew Jackson',name)
@@ -154,6 +159,16 @@ def parse(s,vol):
     for n,(at,after,date,(sender,recipient)) in enumerate(heads):
         nextat=heads[n+1][0] if n+1<len(heads) else len(lines)
         if nextat<after+2:continue
+        # Stop when a new non-letter document begins, instead of attaching it to a letter.
+        nonletter=re.compile(r'^(?:PETITION|DEPOSITION|COMMISSION|COURT\s+RECORD|ORDERS?|PROCLAMATION|MEMORANDUM|CERTIFICATE|RESOLUTION|AFFIDAVIT|ARTICLES|REPORT OF|LIST OF|MINUTES|ACCOUNT OF)\b',re.I)
+        for k in range(after+2,nextat):
+            title=lines[k].strip()
+            if len(title)<95 and nonletter.match(title):
+                letters=sum(c.isalpha() for c in title)
+                capitals=sum(c.isupper() for c in title)
+                if letters>3 and capitals/letters>.30:
+                    nextat=k
+                    break
         raw='\n'.join(lines[after+1:nextat]).strip()
         if len(raw)<135:continue
         original_len=len(raw)
@@ -173,7 +188,7 @@ def parse(s,vol):
            'source':f'https://archive.org/details/{IDS[vol]}',
            'sourceCitation':f'Correspondence of Andrew Jackson, ed. John Spencer Bassett, volume {vol}'+(f', printed p. ~{page}' if page else '')+' (OCR; needs review).',
            'volume':vol,'page':page,'status':'ocr','kind':'letter',
-           'sourceChecked':False,'extractionWarning':(original_len>36000),
+           'sourceChecked':False,'extractionWarning':(original_len>36000), 'needsReview':(original_len>17000 or len(recipient)>65 or len(sender)>65),
         })
     print('Volume',vol,'candidate headings:',len(heads),'accepted:',len(docs),flush=True)
     if len(docs)<30:
