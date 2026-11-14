@@ -242,17 +242,46 @@ function parseCSV(src){let rows=[],row=[],cur='',quoted=false;for(let i=0;i<src.
 function addOne(){let from=$('#inFrom').value.trim(),to=$('#inTo').value.trim(),date=$('#inDate').value,text=$('#inText').value.trim(),status=$('#inStatus').value;if(!from||!to||!date||!text){toast('Fill in sender, recipient, date, and text');return}addImported([{from,to,date,subject:$('#inSubject').value.trim()||'Untitled letter',status,original:status==='original'?text:'',modern:status==='adapted'?text:'',source:$('#inSource').value.trim(),summary:text.slice(0,150)}])}
 function download(name,s,type='application/json'){if(window.AndroidBridge){try{AndroidBridge.beginSave(name,type);for(let i=0;i<s.length;i+=16000)AndroidBridge.saveChunk(s.slice(i,i+16000));AndroidBridge.finishSave();toast('Choose a file location');return}catch(e){toast('Export failed: '+e.message);return}}let url=URL.createObjectURL(new Blob([s],{type}));let a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 function downloadTemplate(){let v=[{date:'1798-01-01',from:'Andrew Jackson',to:'A Correspondent',subject:'Example letter',modern:'Your clear modern-English version goes here',original:'Put the verified original transcription here',summary:'One sentence overview',context:'Historical details',replyContext:'What prior letter this responds to, if known',source:'https://...',status:'adapted',sourceChecked:false,sourceCitation:'Edition and page',kind:'letter'}];download('jackson_import_template.json',JSON.stringify(v,null,2))}
-function downloadCompiledHTML(){
- // Complete, single-file, re-openable archive. Avoid relying on IndexedDB or localStorage for bulky correspondence.
- const safeJson=x=>JSON.stringify(x).replace(/</g,'\\u003c').replace(/\u2028/g,'\\u2028').replace(/\u2029/g,'\\u2029');
- const clone=document.documentElement.cloneNode(true); clone.querySelector('#modalMount')?.replaceChildren(); clone.querySelector('#toastMount')?.replaceChildren(); clone.querySelector('#sidebar')?.classList.remove('open'); clone.querySelector('#overlay')?.classList.remove('open'); clone.querySelector('#reader')?.classList.remove('show'); const start=clone.outerHTML;
+async function downloadCompiledHTML(){
+ // Export a truly standalone document. The Android shell serves its UI
+ // modules separately; embed each script before offering a portable HTML.
+ const safeJson=x=>JSON.stringify(x).replace(/</g,'\u003c').replace(/\u2028/g,'\u2028').replace(/\u2029/g,'\u2029');
+ let scripts={};
+ try{
+   for(const file of ['threading.js','sms_view.js','navigation.js','reader_ui.js']){
+     const response=await fetch('/'+file,{cache:'force-cache'});
+     if(!response.ok)throw Error(file+' not available (HTTP '+response.status+')');
+     scripts[file]=await response.text();
+     if(!scripts[file].trim())throw Error(file+' was empty');
+   }
+ }catch(e){
+   toast('Standalone HTML could not be packaged; use Export JSON. '+String(e.message||e));
+   return;
+ }
+ const clone=document.documentElement.cloneNode(true);
+ clone.querySelector('#modalMount')?.replaceChildren();
+ clone.querySelector('#toastMount')?.replaceChildren();
+ clone.querySelector('#sidebar')?.classList.remove('open');
+ clone.querySelector('#overlay')?.classList.remove('open');
+ clone.querySelector('#reader')?.classList.remove('show');
+ const start=clone.outerHTML;
  const beg=start.indexOf('const STARTER_LETTERS='),end=start.indexOf('const STORE=',beg);
  if(beg<0||end<0){toast('Unable to package HTML; use Export JSON instead');return}
  const prefix='const STARTER_LETTERS='+safeJson(data)+';\nconst STARTER_PEOPLE='+safeJson(people)+';\nconst BUNDLED_STATE='+safeJson({notes,starred:[...starred],read:[...read]})+';\n';
  let output='<!doctype html>\n'+start.slice(0,beg)+prefix+start.slice(end);
- if(output.length>80_000_000){toast('HTML archive is over 80 MB. Save an exported JSON backup instead.');return}
+ for(const [file,source] of Object.entries(scripts)){
+   const tag='<script src="'+file+'"></script>';
+   if(!output.includes(tag)){toast('Standalone HTML missing '+file);return}
+   output=output.replace(tag,'<script>'+source.replace(/<\/script/gi,'<\\/script')+'</script>');
+ }
+ // The entire correspondence collection is included in STARTER_LETTERS for
+ // this one-file export; do not fetch corpus.json from an absent file server.
+ const loader='read.add(state.id);save(false);render();loadLargeArchive();loadBundledCorrespondence();';
+ if(!output.includes(loader)){toast('Unable to package offline archive; use Export JSON');return}
+ output=output.replace(loader,'read.add(state.id);save(false);render();');
+ if(output.length>85_000_000){toast('HTML archive is over 85 MB. Save a JSON backup instead.');return}
  download('jackson_correspondence_complete_'+data.length+'_letters.html',output,'text/html;charset=utf-8');
- toast('Created a new standalone HTML with '+data.length+' loaded entries');
+ toast('Standalone HTML saved with '+data.length+' records and offline reader scripts');
 }
 function exportData(){download('jackson_correspondence_archive.json',JSON.stringify({letters:data,people,notes,starred:[...starred],read:[...read],readme:'Modern-English adaptations are not literal transcripts. sourceChecked means checked against an identified printed archival edition.'},null,2));toast('Archive exported')}
 
