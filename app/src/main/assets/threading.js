@@ -186,7 +186,7 @@
   function renderTab(d, tab) {
     const legacy = !d.modern && d._legacyAdaptation;
     if (tab === "notes") {
-      return "<div class='gmail-document info'><p>Notes are saved locally on this device.</p><textarea class='gmail-note' id='gmail-note-" +
+      return "<div class='gmail-document info'><p>Notes are saved locally on this device.</p><textarea class='gmail-note' aria-label='Personal notes for this historical letter' id='gmail-note-" +
         escapeHTML(d.id) + "' oninput=\"GmailThreadUI.noteChanged('" + escapeHTML(d.id) + "')\" placeholder='Your notes on this letter...'>" +
         escapeHTML(notes[d.id] || (d._legacyId && notes[d._legacyId]) || "") +
         "</textarea><button class='ghost' onclick=\"GmailThreadUI.saveNote('" + escapeHTML(d.id) + "')\">Save note</button></div>";
@@ -213,7 +213,7 @@
     const reading = d.modern || d._legacyAdaptation ? "Plain English" : "Reading copy";
     const badge = d.modern ? "OCR source · plain-English adaptation" : d._legacyAdaptation ? "OCR source · earlier adaptation" : d.status === "ocr" ? "Uncorrected OCR" : d.sourceChecked ? "Edited and source checked" : "Earlier adaptation, unchecked";
     let tabs = [["reading",reading],["original","Original OCR"],["background","Background"],["notes","My notes"]].map(pair =>
-      "<button class='gmail-tab " + (tab===pair[0]?"active":"") + "' onclick=\"GmailThreadUI.tab('" + escapeHTML(d.id) + "','" + pair[0] + "')\">" + pair[1] + "</button>").join("");
+      "<button class='gmail-tab " + (tab===pair[0]?"active":"") + "' aria-pressed='" + String(tab===pair[0]) + "' onclick=\"GmailThreadUI.tab('" + escapeHTML(d.id) + "','" + pair[0] + "')\">" + pair[1] + "</button>").join("");
     const issues = Array.isArray(d.ocrFlags) ? d.ocrFlags : [];
     const flagLabels = {
       letter_digit_fusion:"digits fused into words",
