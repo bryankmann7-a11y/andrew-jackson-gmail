@@ -5,6 +5,8 @@
   const JACKSON = "Andrew Jackson";
   let cache = null, cacheCount = -1, opened = new Set(), tabById = new Map();
   let noteTimer = null;
+  // Normalize full text once per letter, only when the user searches.
+  const searchCache = new WeakMap();
   const styles = [
     ".gmail-list-item{display:flex;width:100%;gap:12px;text-align:left;padding:15px 16px;border:0;border-bottom:1px solid var(--line);background:#fff;align-items:flex-start;color:var(--ink)}",
     ".gmail-list-item:hover{background:#f5f8fc}.gmail-list-item.selected{background:#eaf1fc}.gmail-list-item.unread .gmail-who,.gmail-list-item.unread .gmail-subject{font-weight:760}",
@@ -36,7 +38,18 @@
     return Math.round((Date.parse(a.date + "T12:00:00Z") - Date.parse(b.date + "T12:00:00Z")) / 86400000);
   }
   function searchText(d) {
-    return [d.from,d.to,d.date,d.subject,d.summary,d.modern,d.original,d.context].join(" ").toLowerCase();
+    let text = searchCache.get(d);
+    if (text === undefined) {
+      text = [d.from,d.to,d.date,d.subject,d.summary,d.modern,d._legacyAdaptation,
+        d.readable,d.original,d.context,d.sourceCitation]
+        .filter(Boolean).join(" ").toLowerCase();
+      searchCache.set(d,text);
+    }
+    return text;
+  }
+  function matchesQuery(d,query) {
+    const terms = String(query || "").trim().toLowerCase().split(/\s+/).filter(Boolean);
+    return !terms.length || terms.every(word => searchText(d).includes(word));
   }
   function excerpt(d, max) {
     let raw = d.summary && !d.summary.toLowerCase().includes("automatically extracted") ? d.summary : (d.modern || d.readable || d.original || "");
@@ -140,7 +153,7 @@
   }
   function list() {
     const query = state.query.trim().toLowerCase();
-    const groups = model().groups.filter(t => t.messages.some(d => folderMatches(d,state.folder) && (!window.JacksonReaderUI || JacksonReaderUI.matches(d)) && (!query || searchText(d).includes(query))));
+    const groups = model().groups.filter(t => t.messages.some(d => folderMatches(d,state.folder) && (!window.JacksonReaderUI || JacksonReaderUI.matches(d)) && matchesQuery(d,query)));
     groups.sort((a,b) => state.sort === "old" ? a.last.localeCompare(b.last) : b.last.localeCompare(a.last));
     return groups;
   }
@@ -273,7 +286,7 @@
     container.innerHTML = groups.slice(0, LIST_LIMIT).map(renderRow).join("") || "<div class='empty'><h3>No matches</h3>Try another search, folder, or year.</div>";
     container.scrollTop = oldScroll;
     $("#reader").innerHTML = renderThread(t, groups);
-    $("#archiveNotice").style.display = "none";
+    $("#archiveNotice").style.display = typeof archiveLoadStatus !== "undefined" && archiveLoadStatus !== "ready" ? "" : "none";
   }
   function select(id) {
     const t = model().byThread.get(id) || model().byMessage.get(id);
@@ -335,5 +348,5 @@
     return model().groups.filter(t=>t.messages.some(d=>folderMatches(d,folder))).length;
   }
   function getFilteredCount(){return list().length;}
-  window.GmailThreadUI={render,select,toggle,expandAll,collapseAll,tab,star,saveNote,noteChanged,counts,getFilteredCount,threadForMessage:function(id){return model().byMessage.get(id)},setExpanded:function(id){opened=new Set([id]);}};
+  window.GmailThreadUI={render,select,toggle,expandAll,collapseAll,tab,star,saveNote,noteChanged,counts,getFilteredCount,matchesQuery,threadForMessage:function(id){return model().byMessage.get(id)},setExpanded:function(id){opened=new Set([id]);}};
 })();
