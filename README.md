@@ -1,12 +1,12 @@
 # Jackson Letters — offline Android correspondence reader
 
-An Android app for reading Andrew Jackson's historical correspondence through a familiar Gmail-style inbox and message threads. It is an offline historical reader, **not** an email client.
+An independently installable Android app for reading Andrew Jackson's historical correspondence through a familiar Gmail-style inbox and message threads. It is an offline historical reader, **not** an email client.
 
 ## Get the Android app
 
-Download the **JacksonLetters-v3.3.0.apk** file from the [GitHub releases page](https://github.com/bryankmann7-a11y/andrew-jackson-gmail/releases). Open the downloaded APK on Android to install it. An Android browser or file manager may ask for permission to install the APK.
+Download the **JacksonLetters-Standalone.apk** file from the [GitHub releases page](https://github.com/bryankmann7-a11y/andrew-jackson-gmail/releases). Open the downloaded APK on Android to install it. An Android browser or file manager may ask for permission to install the APK.
 
-**Do not uninstall an existing copy first.** Its notes, read markers, and stars live on your phone. Installing over the current version should preserve them when both APKs share the same signing key. If Android reports a signature conflict, export your JSON backup from the installed app before making any changes.
+**This is a separate installation, not an update.** The Android application ID is `org.jacksonletters.archive.standalone`, so it installs beside earlier Jackson Letters apps without replacing them. Their notes and stars remain inside the earlier apps. To move your notes, export JSON from the old app and import it into the new app; the new app has its own empty local storage.
 
 This is a personal, debug-signed Android APK, not a Google Play release. Android 8.0+ is supported.
 
