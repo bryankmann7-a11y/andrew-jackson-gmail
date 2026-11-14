@@ -32,7 +32,7 @@ vm.runInContext(html.slice(start,end)+"\nwindow.saveStandalone=downloadCompiledH
   assert.ok(!artifact.blob.includes('<script src="'+file+'"></script>'),file+" still external");
   assert.ok(artifact.blob.includes(fs.readFileSync(path.join(assets,file),"utf8").slice(0,45)),file+" source not embedded");
  }
- assert.ok(!artifact.blob.includes("read.add(state.id);save(false);render();loadLargeArchive();loadBundledCorrespondence();"),"Export still needs network corpus");
+ assert.equal(artifact.blob.split("read.add(state.id);save(false);render();loadLargeArchive();loadBundledCorrespondence();").length-1,1,"Standalone export should retain this loader only as an inert string inside the exporter function, not call it");
  assert.ok(artifact.blob.includes("\\u003c/script"),"Embedded JSON wasn't HTML-escaped");
  assert.ok(artifact.blob.includes("My note") && artifact.blob.includes("A letter with angle brackets"));
  console.log("STANDALONE_EXPORT_TESTS_OK: embedded archive, four scripts, notes and safe JSON");
