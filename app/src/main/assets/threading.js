@@ -198,7 +198,7 @@
     const tab = tabById.get(d.id) || "reading";
     const source = sourceHref(d.source);
     const reading = d.modern || d._legacyAdaptation ? "Plain English" : "Reading copy";
-    const badge = d.status === "ocr" ? "Uncorrected OCR" : d.sourceChecked ? "Edited and source checked" : "Earlier adaptation, unchecked";
+    const badge = d.modern ? "OCR source · plain-English adaptation" : d._legacyAdaptation ? "OCR source · earlier adaptation" : d.status === "ocr" ? "Uncorrected OCR" : d.sourceChecked ? "Edited and source checked" : "Earlier adaptation, unchecked";
     let tabs = [["reading",reading],["original","Original OCR"],["background","Background"],["notes","My notes"]].map(pair =>
       "<button class='gmail-tab " + (tab===pair[0]?"active":"") + "' onclick=\"GmailThreadUI.tab('" + escapeHTML(d.id) + "','" + pair[0] + "')\">" + pair[1] + "</button>").join("");
     const issues = Array.isArray(d.ocrFlags) ? d.ocrFlags : [];
